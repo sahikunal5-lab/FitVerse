@@ -1,0 +1,21 @@
+
+# Node.js
+**/node_modules/
+**/dist/
+
+# Python
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+*.pyc
+
+# Secrets
+**/.env
+**/.env.local
+**/.env.*.local
+**/.env.production
+
+# Editor and operating system
+.vscode/
+.DS_Store
+Thumbs.db
