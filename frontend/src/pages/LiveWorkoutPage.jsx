@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react";
 import { Camera, CameraOff, ShieldCheck } from "lucide-react";
 
@@ -84,12 +83,31 @@ export default function LiveWorkoutPage() {
 
   return (
     <section className="workout-page">
-      <div className="page-heading">
-        <h1>Live Workout Trainer</h1>
-        <p>
-          Your AI workout training environment
+
+      {/* New Hero Heading */}
+
+      <div className="hero-content">
+
+        <div className="ai-badge">
+          <span className="live-dot"></span>
+          AI-POWERED FITNESS
+        </div>
+
+        <h1 className="hero-heading">
+          Your Camera Is Now
+          <br />
+          <span className="highlight">
+            Your Gym Coach.
+          </span>
+        </h1>
+
+        <p className="hero-description">
+          Train smarter. Move better. Get stronger.
         </p>
+
       </div>
+
+      {/* Camera Panel */}
 
       <div className="workout-panel">
         <div className="camera-preview">
