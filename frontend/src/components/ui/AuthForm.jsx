@@ -11,6 +11,7 @@ import {
 
 import {
   signUp,
+  signIn,
   resendSignupConfirmation,
 } from "../../features/auth/authService";
 
@@ -19,8 +20,19 @@ const confirmationMessage =
   "If registration is pending, check your email for a confirmation link.";
 
 
+// ==========================================
+// AUTHENTICATION ERROR HANDLING
+// ==========================================
+
 function getAuthErrorMessage(error) {
   switch (error?.code) {
+
+    case "invalid_credentials":
+      return "Invalid email or password.";
+
+    case "email_not_confirmed":
+      return "Please verify your email before logging in.";
+
     case "weak_password":
       return "Choose a stronger password.";
 
@@ -52,7 +64,12 @@ function getAuthErrorMessage(error) {
 }
 
 
+// ==========================================
+// AUTHENTICATION FORM COMPONENT
+// ==========================================
+
 export default function AuthForm({ mode }) {
+
   const isSignup = mode === "signup";
 
   const emailRef = useRef(null);
@@ -74,6 +91,10 @@ export default function AuthForm({ mode }) {
   const loading = pending !== null;
 
 
+  // ==========================================
+  // HANDLE INPUT CHANGES
+  // ==========================================
+
   function handleChange(event) {
     const { name, value } = event.target;
 
@@ -87,6 +108,10 @@ export default function AuthForm({ mode }) {
   }
 
 
+  // ==========================================
+  // HANDLE LOGIN AND SIGNUP
+  // ==========================================
+
   async function onSubmit(event) {
     event.preventDefault();
 
@@ -95,24 +120,32 @@ export default function AuthForm({ mode }) {
     setMessage("");
     setError("");
 
-    // Validate the user's name
+
+    // 1. Validate the user's name during signup
+
     if (isSignup) {
       const nameLength =
         Array.from(values.name.trim()).length;
 
       if (nameLength === 0 || nameLength > 100) {
-        setError("Enter a name between 1 and 100 characters.");
+        setError(
+          "Enter a name between 1 and 100 characters."
+        );
         return;
       }
     }
 
-    // Validate password length
-    if (values.password.length < 8) {
+
+    // 2. Validate password length during signup
+
+    if (isSignup && values.password.length < 8) {
       setError("Use a password with at least 8 characters.");
       return;
     }
 
-    // Validate confirm password
+
+    // 3. Validate confirm password
+
     if (
       isSignup &&
       values.password !== values.confirmPassword
@@ -121,44 +154,80 @@ export default function AuthForm({ mode }) {
       return;
     }
 
-    // Login will be connected in Phase 3.6
-    if (!isSignup) {
-      setMessage(
-        "Login will be activated in Phase 3.6."
-      );
-      return;
-    }
 
-    setPending("signup");
+    // 4. Set the current authentication operation
+
+    setPending(isSignup ? "signup" : "login");
+
 
     try {
-      const data = await signUp({
-        name: values.name,
-        email: values.email,
-        password: values.password,
-      });
 
-      if (data.session) {
-        setMessage(
-          "Registration successful. You are signed in."
-        );
-      } else {
-        setMessage(confirmationMessage);
+      // ==========================================
+      // SIGNUP
+      // ==========================================
+
+      if (isSignup) {
+
+        const data = await signUp({
+          name: values.name,
+          email: values.email,
+          password: values.password,
+        });
+
+        if (data.session) {
+          setMessage(
+            "Registration successful. You are signed in."
+          );
+        } else {
+          setMessage(confirmationMessage);
+        }
+
       }
 
+      // ==========================================
+      // LOGIN
+      // ==========================================
+
+      else {
+
+        const data = await signIn({
+          email: values.email,
+          password: values.password,
+        });
+
+        if (!data.session) {
+          setError("Unable to establish a login session.");
+          return;
+        }
+
+        setMessage("Login successful.");
+      }
+
+
     } catch (error) {
-      // Avoid revealing whether an account exists
+
+      // Avoid revealing whether an account exists during signup
+
       if (
-        error?.code === "user_already_exists" ||
-        error?.code === "email_exists"
+        isSignup &&
+        (
+          error?.code === "user_already_exists" ||
+          error?.code === "email_exists"
+        )
       ) {
         setMessage(confirmationMessage);
       } else {
         setError(getAuthErrorMessage(error));
       }
 
+
     } finally {
+
+      // Stop loading
+
       setPending(null);
+
+      // Clear sensitive password fields
 
       setValues((prev) => ({
         ...prev,
@@ -169,7 +238,12 @@ export default function AuthForm({ mode }) {
   }
 
 
+  // ==========================================
+  // RESEND CONFIRMATION EMAIL
+  // ==========================================
+
   async function handleResend() {
+
     if (loading) return;
 
     setMessage("");
@@ -182,11 +256,13 @@ export default function AuthForm({ mode }) {
     setPending("resend");
 
     try {
+
       await resendSignupConfirmation(values.email);
 
       setMessage(confirmationMessage);
 
     } catch (error) {
+
       if (
         error?.code === "user_not_found" ||
         error?.code === "user_already_exists" ||
@@ -203,7 +279,12 @@ export default function AuthForm({ mode }) {
   }
 
 
+  // ==========================================
+  // AUTHENTICATION UI
+  // ==========================================
+
   return (
+
     <main className="auth-layout container">
 
       <div className="auth-aside">
@@ -251,7 +332,7 @@ export default function AuthForm({ mode }) {
         <p className="auth-ui-notice">
           {isSignup
             ? "Verify your email address after registration."
-            : "Login will be activated in Phase 3.6."}
+            : "Sign in securely with your verified email."}
         </p>
 
 
@@ -261,7 +342,11 @@ export default function AuthForm({ mode }) {
           aria-busy={loading}
         >
 
+
+          {/* Full name */}
+
           {isSignup && (
+
             <label>
               Full name
 
@@ -277,8 +362,11 @@ export default function AuthForm({ mode }) {
               />
 
             </label>
+
           )}
 
+
+          {/* Email address */}
 
           <label>
             Email address
@@ -298,6 +386,8 @@ export default function AuthForm({ mode }) {
           </label>
 
 
+          {/* Password */}
+
           <label>
             Password
 
@@ -311,8 +401,12 @@ export default function AuthForm({ mode }) {
                     ? "new-password"
                     : "current-password"
                 }
-                minLength={8}
-                placeholder="At least 8 characters"
+                minLength={isSignup ? 8 : undefined}
+                placeholder={
+                  isSignup
+                    ? "At least 8 characters"
+                    : "Enter your password"
+                }
                 value={values.password}
                 onChange={handleChange}
                 disabled={loading}
@@ -336,10 +430,14 @@ export default function AuthForm({ mode }) {
               </button>
 
             </span>
+
           </label>
 
 
+          {/* Confirm password */}
+
           {isSignup && (
+
             <label>
               Confirm password
 
@@ -355,8 +453,11 @@ export default function AuthForm({ mode }) {
               />
 
             </label>
+
           )}
 
+
+          {/* Submit button */}
 
           <button
             type="submit"
@@ -366,43 +467,62 @@ export default function AuthForm({ mode }) {
 
             {pending === "signup"
               ? "Creating account..."
-              : isSignup
-                ? "Create account"
-                : "Login (preview)"}
+              : pending === "login"
+                ? "Signing in..."
+                : isSignup
+                  ? "Create account"
+                  : "Login"}
 
             <ArrowRight size={18} />
 
           </button>
 
 
+          {/* Resend confirmation button */}
+
           {isSignup && (
+
             <button
               type="button"
               className="button button--outline"
               onClick={handleResend}
               disabled={loading}
             >
+
               {pending === "resend"
                 ? "Requesting email..."
                 : "Resend confirmation email"}
+
             </button>
+
           )}
 
 
+          {/* Success message */}
+
           {message && (
+
             <p className="form-message" role="status">
               {message}
             </p>
+
           )}
 
+
+          {/* Error message */}
+
           {error && (
+
             <p className="error-message" role="alert">
               {error}
             </p>
+
           )}
 
         </form>
 
+
+        {/* Switch between login and signup */}
 
         <p className="auth-switch">
 
@@ -411,14 +531,17 @@ export default function AuthForm({ mode }) {
             : "New to FitVerse? "}
 
           <Link to={isSignup ? "/login" : "/signup"}>
+
             {isSignup
               ? "Login"
               : "Create an account"}
+
           </Link>
 
         </p>
 
       </div>
+
     </main>
   );
 }
