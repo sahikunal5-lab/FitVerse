@@ -92,3 +92,24 @@ export async function getAccessToken() {
 
   return session?.access_token ?? null;
 }
+
+
+
+//6. SignUP Conformation
+
+export async function resendSignupConfirmation(email) {
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+
+    email: email.trim(),
+
+    options: {
+      emailRedirectTo:
+        `${window.location.origin}/login`,
+    },
+  });
+
+  if (error) {
+    throw error;
+  }
+}
