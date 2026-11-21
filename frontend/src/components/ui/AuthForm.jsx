@@ -523,7 +523,17 @@ export default function AuthForm({ mode }) {
 
 
         {/* Switch between login and signup */}
+        {!isSignup && (
 
+          <p className="auth-switch">
+
+            <Link to="/forgot-password">
+              Forgot your password?
+            </Link>
+
+          </p>
+
+        )}
         <p className="auth-switch">
 
           {isSignup
