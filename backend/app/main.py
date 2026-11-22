@@ -3,6 +3,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from app.api.routes.auth_test import (
+    router as auth_test_router,
+)
 
 
 class Settings(BaseSettings):
@@ -20,6 +23,11 @@ app = FastAPI(
     title="FitVerse API",
     description="Backend API for FitVerse",
     version="0.1.0"
+)
+
+app.include_router(
+    auth_test_router,
+    prefix="/api/v1",
 )
 
 app.add_middleware(
