@@ -21,6 +21,8 @@ import ComingSoonPage from "./pages/ComingSoonPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 
+import AuthCheckPage from "./pages/AuthCheckPage";
+
 
 // Route Protection
 
@@ -92,6 +94,11 @@ export default function App() {
           <Route
             path="/features/:slug"
             element={<ComingSoonPage />}
+          />
+
+          <Route
+            path="/auth-check"
+            element={<AuthCheckPage />}
           />
 
         </Route>
