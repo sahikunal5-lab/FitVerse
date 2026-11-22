@@ -6,7 +6,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from app.api.routes.auth_test import (
     router as auth_test_router,
 )
-
+from app.api.routes.profile import (
+    router as profile_router,
+)
 
 class Settings(BaseSettings):
     frontend_origin: str = "http://localhost:5173"
@@ -23,6 +25,11 @@ app = FastAPI(
     title="FitVerse API",
     description="Backend API for FitVerse",
     version="0.1.0"
+)
+
+app.include_router(
+    profile_router,
+    prefix="/api/v1",
 )
 
 app.include_router(

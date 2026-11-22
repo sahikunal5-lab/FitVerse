@@ -10,6 +10,9 @@ import {
   fetchAuthenticatedUser,
 } from "../services/authenticatedApi";
 
+import {
+  fetchMyProfile,
+} from "../services/authenticatedApi";
 
 export default function AuthCheckPage() {
 
@@ -34,7 +37,7 @@ export default function AuthCheckPage() {
 
     try {
 
-      const data = await fetchAuthenticatedUser();
+      const data = await fetchMyProfile();
 
       setUserData(data);
 
@@ -94,28 +97,7 @@ export default function AuthCheckPage() {
         {/* SUCCESS RESPONSE */}
 
         {userData && (
-
-          <div
-            className="form-message"
-            role="status"
-          >
-
-            <h3>Authentication Successful</h3>
-
-            <p>
-              Status: {userData.status}
-            </p>
-
-            <p>
-              User ID: {userData.user_id}
-            </p>
-
-            <p>
-              Email: {userData.email}
-            </p>
-
-          </div>
-
+          <pre>{JSON.stringify(userData, null, 2)}</pre>
         )}
 
 

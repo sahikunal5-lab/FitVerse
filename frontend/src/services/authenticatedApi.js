@@ -74,3 +74,38 @@ export async function fetchAuthenticatedUser() {
 
   return data;
 }
+
+
+export async function fetchMyProfile() {
+
+  const token = await getAccessToken();
+
+  if (!token) {
+    throw new Error("Please log in first.");
+  }
+
+  const response = await fetch(
+    `${API_BASE_URL.replace(/\/+$/, "")}/api/v1/me`,
+    {
+      method: "GET",
+
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+
+      cache: "no-store",
+    }
+  );
+
+  if (response.status === 401) {
+    throw new Error("Session invalid or expired.");
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      `Profile request failed: HTTP ${response.status}`
+    );
+  }
+
+  return await response.json();
+}
