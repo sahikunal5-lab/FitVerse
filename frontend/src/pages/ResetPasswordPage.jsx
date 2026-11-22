@@ -21,6 +21,9 @@ import {
   recoveryFinished,
 } from "../features/auth/authSlice";
 
+import {
+  clearRecoveryMarker,
+} from "../features/auth/recoverySession";
 
 // ==========================================
 // RESET PASSWORD ERROR HANDLING
@@ -204,6 +207,8 @@ export default function ResetPasswordPage() {
 
       await updatePassword(values.password);
 
+      // Clear the temporary recovery marker
+      clearRecoveryMarker();
 
       // Preserve success message after logout
 

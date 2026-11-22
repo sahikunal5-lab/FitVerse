@@ -10,6 +10,12 @@ import {
   recoveryFinished,
 } from "./authSlice";
 
+import {
+  saveRecoveryMarker,
+  hasValidRecoveryMarker,
+  clearRecoveryMarker,
+} from "./recoverySession";
+
 
 export default function AuthSync() {
 
@@ -26,6 +32,10 @@ export default function AuthSync() {
 
         if (!active) return;
 
+        // ==================================
+        // 1. NORMAL AUTHENTICATION STATE
+        // ==================================
+
         const user = session?.user;
 
         const currentUser = user
@@ -35,24 +45,82 @@ export default function AuthSync() {
             }
           : null;
 
-        // Synchronize normal authentication state
         dispatch(authChanged(currentUser));
 
-        // Recognize verified password recovery
-        if (event === "PASSWORD_RECOVERY" && session) {
-          dispatch(recoveryStarted());
+
+        // ==================================
+        // 2. NEW PASSWORD RECOVERY EVENT
+        // ==================================
+
+        if (event === "PASSWORD_RECOVERY") {
+
+          const onResetPage =
+            window.location.pathname.replace(/\/+$/, "")
+            === "/reset-password";
+
+          if (user?.id && onResetPage) {
+
+            saveRecoveryMarker(user.id);
+
+            dispatch(recoveryStarted());
+
+          }
+
+          return;
         }
 
-        // Clear recovery state after logout
-        if (event === "SIGNED_OUT") {
-          dispatch(recoveryFinished());
+
+        // ==================================
+        // 3. RESTORE AFTER PAGE REFRESH
+        // ==================================
+
+        if (event === "INITIAL_SESSION") {
+
+          if (
+            user?.id &&
+            hasValidRecoveryMarker(user.id)
+          ) {
+
+            dispatch(recoveryStarted());
+
+          } else {
+
+            clearRecoveryMarker();
+
+            dispatch(recoveryFinished());
+
+          }
+
+          return;
         }
+
+
+        // ==================================
+        // 4. CLEAR RECOVERY AFTER LOGOUT
+        // ==================================
+
+        if (event === "SIGNED_OUT") {
+
+          clearRecoveryMarker();
+
+          dispatch(recoveryFinished());
+
+        }
+
       }
     );
 
+
+    // ==================================
+    // 5. CLEANUP
+    // ==================================
+
     return () => {
+
       active = false;
+
       subscription.unsubscribe();
+
     };
 
   }, [dispatch]);
