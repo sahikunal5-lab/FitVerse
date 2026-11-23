@@ -33,6 +33,29 @@ button:disabled { cursor: not-allowed; opacity: .6; }
 .button--green { color: #fff; background: linear-gradient(120deg, #058144, #079c50); box-shadow: 0 8px 20px #068d4623; }
 .button--large { padding: 17px 28px; font-size: 16px; }
 .mobile-menu-toggle { display: none; background: none; border: 0; color: #0b1028; }
+.fv-profile-nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border: 2px solid #079447;
+  border-radius: 50%;
+  background: #dcf8e5;
+  color: #078c40;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.fv-profile-nav-link:hover {
+  background: #c9f1d6;
+  transform: translateY(-2px);
+}
+
+.fv-profile-nav-link:focus-visible {
+  outline: 3px solid #079447;
+  outline-offset: 3px;
+}
 
 /* Hero */
 .hero { min-height: 440px; display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(0, .98fr); align-items: center; gap: 10px; }
@@ -756,6 +779,631 @@ button:disabled { cursor: not-allowed; opacity: .6; }
     }
 }
 
+
+/* =========================================
+   FITVERSE COMPACT PROFILE CARD
+========================================= */
+
+.fv-mini-profile-page,
+.fv-mini-profile-page * {
+  box-sizing: border-box;
+}
+
+.fv-mini-profile-page {
+  min-height: calc(100vh - 96px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 42px 16px 70px;
+  background: #f6faf7;
+}
+
+/* MAIN PORTRAIT CARD */
+
+.fv-mini-profile-card {
+  width: 100%;
+  max-width: 430px;
+  padding: 30px 28px;
+  background: #ffffff;
+  border: 1px solid #e1ede5;
+  border-radius: 24px;
+  box-shadow: 0 15px 45px rgba(7, 68, 35, 0.09);
+}
+
+/* PROFILE HEADER */
+
+.fv-mini-profile-header {
+  text-align: center;
+  padding-bottom: 25px;
+}
+
+.fv-mini-profile-avatar {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: #e0f8e8;
+  color: #078c43;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+}
+
+.fv-mini-profile-header h1 {
+  margin: 0 0 12px;
+  font-size: 25px;
+  font-weight: 800;
+  color: #102b1b;
+}
+
+.fv-mini-profile-header h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.fv-mini-profile-header p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 14px;
+  color: #718177;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.fv-mini-profile-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 30px;
+  background: #e5f8eb;
+  color: #08773c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* PROFILE SECTIONS */
+
+.fv-mini-profile-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 0;
+  border-top: 1px solid #eaf0ec;
+}
+
+.fv-mini-profile-section-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #078c43;
+  background: #e8f8ed;
+  border-radius: 13px;
+}
+
+.fv-mini-profile-section-body {
+  min-width: 0;
+}
+
+.fv-mini-profile-section-body h3 {
+  font-size: 16px;
+  font-weight: 750;
+  color: #173523;
+  line-height: 1.35;
+  margin: 0 0 7px;
+}
+
+.fv-mini-profile-section-body p {
+  font-size: 13px;
+  color: #758579;
+  line-height: 1.6;
+  margin: 0 0 10px;
+}
+
+.fv-mini-profile-upcoming {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #a5751b;
+  background: #fff3da;
+  padding: 6px 11px;
+  border-radius: 20px;
+}
+
+.fv-mini-profile-secure {
+  color: #078b43;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.fv-mini-profile-workout {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #078c43;
+  font-size: 13px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.fv-mini-profile-workout:hover {
+  color: #045e30;
+}
+
+/* LOGOUT BUTTON */
+
+.fv-mini-profile-logout {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 14px;
+  background: #078c43;
+  color: #ffffff;
+  border: none;
+  border-radius: 13px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.fv-mini-profile-logout:hover:not(:disabled) {
+  background: #056d36;
+}
+
+.fv-mini-profile-logout:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.fv-mini-profile-error {
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  background: #fff0ee;
+  color: #a02b24;
+  font-size: 12px;
+}
+
+.fv-mini-profile-error button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 7px;
+  padding: 7px 10px;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.fv-mini-profile-page a:focus-visible,
+.fv-mini-profile-page button:focus-visible {
+  outline: 3px solid #15b85e;
+  outline-offset: 3px;
+}
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+  .fv-mini-profile-page {
+    padding: 24px 12px 50px;
+  }
+
+  .fv-mini-profile-card {
+    padding: 25px 20px;
+    border-radius: 19px;
+  }
+}
+
+
+/* ===================================
+   FITVERSE GOOGLE-STYLE ACCOUNT MENU
+=================================== */
+
+.fv-account-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* NAVBAR ICON */
+
+.fv-account-trigger {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #079447;
+  background: #dcf8e5;
+  color: #087a3d;
+  font-size: 21px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fv-account-trigger:hover {
+  background: #c8f0d6;
+}
+
+/* POPUP */
+
+.fv-account-popup {
+  position: absolute;
+  top: calc(100% + 16px);
+  right: 0;
+  z-index: 1000;
+  width: 365px;
+  max-width: calc(100vw - 24px);
+  padding: 16px;
+  background: #252a26;
+  color: #ffffff;
+  border: 1px solid #3b443d;
+  border-radius: 24px;
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.28);
+}
+
+/* POPUP HEADER */
+
+.fv-account-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.fv-account-popup-header h3 {
+  margin: 0;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.fv-account-close {
+  border: none;
+  background: transparent;
+  color: #cad5cc;
+  cursor: pointer;
+  display: flex;
+  padding: 5px;
+}
+
+/* USER INFORMATION */
+
+.fv-account-user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: #111713;
+  border-radius: 16px;
+  margin-bottom: 8px;
+}
+
+.fv-account-avatar {
+  width: 55px;
+  height: 55px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #087c3d;
+  font-size: 25px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+}
+
+.fv-account-user-info {
+  min-width: 0;
+}
+
+.fv-account-user-info strong {
+  display: block;
+  color: #ffffff;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.fv-account-user-info p {
+  margin: 5px 0;
+  font-size: 12px;
+  color: #b5c1b8;
+  overflow-wrap: anywhere;
+}
+
+.fv-account-user-info small {
+  color: #8ddbaa;
+}
+
+/* MENU ITEMS */
+
+.fv-account-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 16px;
+  margin-top: 7px;
+  width: 100%;
+  border-radius: 14px;
+  background: #111713;
+  color: #ffffff;
+  text-decoration: none;
+  border: none;
+  text-align: left;
+  font: inherit;
+}
+
+.fv-account-item-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: #243b2c;
+  color: #87ebaa;
+}
+
+.fv-account-item-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.fv-account-item-text strong {
+  display: block;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.fv-account-item-text p {
+  margin: 5px 0 0;
+  color: #a9b9ad;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.fv-account-item-text small {
+  display: inline-block;
+  margin-top: 6px;
+  color: #92dea9;
+  font-size: 11px;
+}
+
+.fv-account-item-link,
+.fv-account-logout {
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.fv-account-item-link:hover,
+.fv-account-logout:hover:not(:disabled) {
+  background: #1b3021;
+}
+
+.fv-account-item-link > svg:last-child {
+  flex-shrink: 0;
+  color: #87ebaa;
+}
+
+.fv-account-logout:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.fv-account-error {
+  padding: 10px;
+  margin: 10px 0 0;
+  color: #ffc3bd;
+  font-size: 12px;
+}
+
+.fv-account-trigger:focus-visible,
+.fv-account-popup button:focus-visible,
+.fv-account-popup a:focus-visible {
+  outline: 3px solid #64dd94;
+  outline-offset: 3px;
+}
+
+
+
+/* ==========================================
+   FITVERSE FITNESS PREFERENCES FORM
+========================================== */
+
+.fv-account-popup {
+  max-height: min(650px, calc(100dvh - 110px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.fv-fitness-view,
+.fv-fitness-view * {
+  box-sizing: border-box;
+}
+
+.fv-fitness-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #3a443c;
+}
+
+.fv-fitness-back {
+  width: 37px;
+  height: 37px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: #324337;
+  color: white;
+  cursor: pointer;
+}
+
+.fv-fitness-back:hover:not(:disabled) {
+  background: #405a47;
+}
+
+.fv-fitness-heading h3 {
+  color: #ffffff;
+  font-size: 17px;
+  margin: 0 0 5px;
+}
+
+.fv-fitness-heading p {
+  color: #a9b9ad;
+  font-size: 12px;
+  margin: 0;
+}
+
+.fv-fitness-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 10px;
+  padding: 20px 0;
+}
+
+.fv-fitness-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.fv-fitness-field span {
+  color: #b5c5b9;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fv-fitness-field input,
+.fv-fitness-field select {
+  width: 100%;
+  min-width: 0;
+  height: 43px;
+  border: 1px solid #3e5144;
+  border-radius: 10px;
+  background: #111713;
+  color: #ffffff;
+  padding: 0 10px;
+  font: inherit;
+  font-size: 13px;
+  color-scheme: dark;
+}
+
+.fv-fitness-field input::placeholder {
+  color: #87968b;
+}
+
+.fv-fitness-field input:focus,
+.fv-fitness-field select:focus {
+  border-color: #61d890;
+  outline: 2px solid rgba(97, 216, 144, 0.22);
+}
+
+.fv-fitness-field input:disabled,
+.fv-fitness-field select:disabled {
+  opacity: 0.65;
+}
+
+.fv-fitness-save {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px;
+  border: none;
+  border-radius: 12px;
+  background: #078c43;
+  color: #ffffff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.fv-fitness-save:hover:not(:disabled) {
+  background: #067237;
+}
+
+.fv-fitness-save:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.fv-fitness-error {
+  padding: 11px;
+  border-radius: 9px;
+  background: #522b2b;
+  color: #ffd2cf;
+  font-size: 12px;
+  margin: 0 0 12px;
+}
+
+.fv-fitness-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px;
+  border-radius: 9px;
+  background: #19452c;
+  color: #b6f5c9;
+  font-size: 12px;
+  margin: 0 0 12px;
+}
+
+.fv-fitness-message {
+  padding: 18px 4px;
+  color: #c6d4c9;
+  font-size: 13px;
+}
+
+.fv-fitness-message p {
+  margin-bottom: 12px;
+}
+
+.fv-fitness-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #294432;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 13px;
+  cursor: pointer;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .fv-account-popup {
+    width: min(365px, calc(100vw - 24px));
+    right: -8px;
+    padding: 12px;
+    border-radius: 18px;
+  }
+}
 
 
 @media (max-width: 1150px) {
