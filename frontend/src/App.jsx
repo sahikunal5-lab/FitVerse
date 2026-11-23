@@ -86,6 +86,9 @@ export default function App() {
 
         <Route element={<ProtectedRoute />}>
 
+
+          
+
           <Route
             path="/workout"
             element={<LiveWorkoutPage />}

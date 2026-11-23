@@ -1,14 +1,12 @@
 
 import { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
   Dumbbell,
   Menu,
   X,
-  CircleUserRound,
-  LogOut,
 } from "lucide-react";
 
 import {
@@ -16,7 +14,7 @@ import {
   selectAuthStatus,
 } from "../../features/auth/authSlice";
 
-import { signOut } from "../../features/auth/authService";
+import AccountMenu from "./AccountMenu";
 
 
 const anchorLinks = [
@@ -29,62 +27,22 @@ const anchorLinks = [
 
 export default function Navbar() {
 
-  const navigate = useNavigate();
-
-  // Read global authentication state
-
+  // Redux authentication state
   const user = useSelector(selectUser);
   const status = useSelector(selectAuthStatus);
 
-
-  // Local Navbar state
-
+  // Mobile navigation state
   const [menuOpen, setMenuOpen] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
-  const [error, setError] = useState("");
 
   const closeMenu = () => setMenuOpen(false);
 
 
-  // ==========================================
-  // LOGOUT FUNCTIONALITY
-  // ==========================================
-
-  async function handleLogout() {
-
-    if (loggingOut) return;
-
-    setError("");
-    setLoggingOut(true);
-
-    try {
-
-      await signOut();
-
-      closeMenu();
-
-      navigate("/", { replace: true });
-
-    } catch (error) {
-
-      setError("Unable to log out. Please try again.");
-
-    } finally {
-
-      setLoggingOut(false);
-
-    }
-  }
-
-
   return (
-
     <header className="site-header">
 
       <div className="container navbar">
 
-
-        {/* FitVerse Brand */}
+        {/* FITVERSE LOGO */}
 
         <Link
           className="brand"
@@ -92,7 +50,6 @@ export default function Navbar() {
           onClick={closeMenu}
           aria-label="FitVerse home"
         >
-
           <Dumbbell
             size={34}
             strokeWidth={2.7}
@@ -102,11 +59,10 @@ export default function Navbar() {
           <span>
             Fit<span>Verse</span>
           </span>
-
         </Link>
 
 
-        {/* Mobile Menu Toggle */}
+        {/* MOBILE MENU BUTTON */}
 
         <button
           type="button"
@@ -120,13 +76,13 @@ export default function Navbar() {
           aria-controls="primary-navigation"
           onClick={() => setMenuOpen((open) => !open)}
         >
-
           {menuOpen
             ? <X size={24} />
             : <Menu size={24} />}
-
         </button>
 
+
+        {/* NAVIGATION CONTENT */}
 
         <div
           id="primary-navigation"
@@ -135,8 +91,7 @@ export default function Navbar() {
           }`}
         >
 
-
-          {/* Navigation Links */}
+          {/* NAVIGATION LINKS */}
 
           <nav
             className="nav-links"
@@ -152,7 +107,6 @@ export default function Navbar() {
             </NavLink>
 
             {anchorLinks.map((item) => (
-
               <a
                 key={item.href}
                 href={item.href}
@@ -160,34 +114,28 @@ export default function Navbar() {
               >
                 {item.label}
               </a>
-
             ))}
 
           </nav>
 
 
-          {/* Authentication Actions */}
+          {/* AUTHENTICATION ACTIONS */}
 
           <div className="nav-actions">
 
-
-            {/* 1. Checking existing session */}
+            {/* CHECKING SESSION */}
 
             {status === "loading" && (
-
               <span role="status">
                 Checking session...
               </span>
-
             )}
 
 
-            {/* 2. User is not logged in */}
+            {/* NOT LOGGED IN */}
 
             {status === "unauthenticated" && (
-
               <>
-
                 <Link
                   to="/login"
                   className="button button--outline"
@@ -203,62 +151,17 @@ export default function Navbar() {
                 >
                   Sign Up
                 </Link>
-
               </>
-
             )}
 
 
-            {/* 3. User is logged in */}
+            {/* LOGGED IN — ACCOUNT POPUP */}
 
             {status === "authenticated" && (
-
-              <>
-
-                <span
-                  className="button button--outline"
-                  title={user?.email ?? "Signed-in account"}
-                >
-
-                  <CircleUserRound size={20} />
-
-                  Account
-
-                </span>
-
-
-                <button
-                  type="button"
-                  className="button button--green"
-                  onClick={handleLogout}
-                  disabled={loggingOut}
-                  aria-busy={loggingOut}
-                >
-
-                  <LogOut size={18} />
-
-                  {loggingOut
-                    ? "Logging out..."
-                    : "Logout"}
-
-                </button>
-
-              </>
-
-            )}
-
-
-            {/* Logout error */}
-
-            {error && status === "authenticated" && (
-
-              <p
-                className="error-message"
-                role="alert"
-              >
-                {error}
-              </p>
-
+              <AccountMenu
+                user={user}
+                closeMobileMenu={closeMenu}
+              />
             )}
 
           </div>
