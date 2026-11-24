@@ -1,4 +1,6 @@
 
+import logging
+from time import perf_counter
 from uuid import UUID
 
 import httpx
@@ -9,6 +11,9 @@ from pydantic import ValidationError
 from app.core.config import get_settings
 from app.schemas.profile import ProfileResponse
 
+
+logger = logging.getLogger("uvicorn.error")
+from app.core.http_client import get_http_client
 
 # ==========================================
 # FETCH AUTHENTICATED USER PROFILE
@@ -39,19 +44,19 @@ async def get_profile_by_user_id(
         "id": f"eq.{user_id}",
     }
 
-    # 4. Send asynchronous database request
+    # Start performance timer
+    start = perf_counter()
+
     try:
+        client = get_http_client()
 
-        async with httpx.AsyncClient(
-            timeout=5.0,
-            follow_redirects=False,
-        ) as client:
+        response = await client.get(
+            url,
+            headers=headers,
+            params=params,
+    )
 
-            response = await client.get(
-                url,
-                headers=headers,
-                params=params,
-            )
+        
 
     except httpx.TimeoutException:
 
@@ -65,6 +70,13 @@ async def get_profile_by_user_id(
         raise HTTPException(
             status_code=503,
             detail="Profile service unavailable.",
+        )
+
+    finally:
+
+        logger.info(
+            "[PERFORMANCE] Profile Database: %.1f ms",
+            (perf_counter() - start) * 1000,
         )
 
     # 5. Handle authorization errors
@@ -95,6 +107,7 @@ async def get_profile_by_user_id(
     # 8. Parse returned database records
     try:
         rows = response.json()
+
     except ValueError:
         raise HTTPException(
             status_code=502,

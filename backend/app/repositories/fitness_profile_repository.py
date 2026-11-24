@@ -1,4 +1,6 @@
 
+import logging
+from time import perf_counter
 from uuid import UUID
 
 import httpx
@@ -13,6 +15,9 @@ from app.schemas.fitness_profile import (
     FitnessProfileResponse,
 )
 
+
+logger = logging.getLogger("uvicorn.error")
+from app.core.http_client import get_http_client
 
 COLUMNS = (
     "user_id,age,height_cm,weight_kg,"
@@ -50,20 +55,19 @@ async def request_fitness_database(
             "return=representation"
         )
 
+    # Start performance timer
+    start = perf_counter()
+
     try:
+        client = get_http_client()
 
-        async with httpx.AsyncClient(
-            timeout=5.0,
-            follow_redirects=False,
-        ) as client:
-
-            response = await client.request(
-                method,
-                url,
-                headers=headers,
-                params=params,
-                json=payload,
-            )
+        response = await client.request(
+            method,
+            url,
+            headers=headers,
+            params=params,
+            json=payload,
+    )
 
     except httpx.TimeoutException:
         raise HTTPException(
@@ -75,6 +79,14 @@ async def request_fitness_database(
         raise HTTPException(
             status_code=503,
             detail="Fitness profile service unavailable.",
+        )
+
+    finally:
+
+        logger.info(
+            "[PERFORMANCE] Fitness Database %s: %.1f ms",
+            method,
+            (perf_counter() - start) * 1000,
         )
 
     return response
@@ -117,6 +129,7 @@ def validate_database_response(
 
     try:
         rows = response.json()
+
     except ValueError:
         raise HTTPException(
             status_code=502,
@@ -145,6 +158,7 @@ def validate_database_response(
         profile = FitnessProfileResponse.model_validate(
             rows[0]
         )
+
     except ValidationError:
         raise HTTPException(
             status_code=502,

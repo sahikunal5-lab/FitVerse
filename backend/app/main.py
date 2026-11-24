@@ -14,6 +14,8 @@ from app.api.routes.fitness_profile import (
     router as fitness_profile_router,
 )
 
+from app.core.http_client import lifespan
+
 class Settings(BaseSettings):
     frontend_origin: str = "http://localhost:5173"
 
@@ -28,7 +30,8 @@ settings = Settings()
 app = FastAPI(
     title="FitVerse API",
     description="Backend API for FitVerse",
-    version="0.1.0"
+    version="0.1.0",
+    lifespan=lifespan
 )
 
 app.include_router(

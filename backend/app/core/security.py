@@ -1,4 +1,6 @@
 
+import logging
+from time import perf_counter
 from typing import Annotated
 from uuid import UUID
 
@@ -13,6 +15,10 @@ from fastapi.security import (
 from pydantic import BaseModel, ValidationError
 
 from app.core.config import get_settings
+
+
+logger = logging.getLogger("uvicorn.error")
+from app.core.http_client import get_http_client
 
 
 # Extract Bearer tokens from incoming requests
@@ -61,17 +67,17 @@ async def get_current_user(
         "Authorization": f"Bearer {token}",
     }
 
-    # 3. Contact Supabase asynchronously
-    try:
-        async with httpx.AsyncClient(
-            timeout=5.0,
-            follow_redirects=False,
-        ) as client:
+    # Start performance timer
+    start = perf_counter()
 
-            response = await client.get(
-                url,
-                headers=headers,
-            )
+    try:
+        client = get_http_client()
+
+        response = await client.get(
+            url,
+            headers=headers,
+    )
+    
 
     except httpx.TimeoutException:
         raise HTTPException(
@@ -83,6 +89,12 @@ async def get_current_user(
         raise HTTPException(
             status_code=503,
             detail="Authentication service unavailable.",
+        )
+
+    finally:
+        logger.info(
+            "[PERFORMANCE] Supabase Auth: %.1f ms",
+            (perf_counter() - start) * 1000,
         )
 
     # 4. Reject invalid or expired credentials

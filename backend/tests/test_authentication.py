@@ -32,6 +32,7 @@ VALID_HEADERS = {
 
 @pytest.fixture
 def client():
+
     with TestClient(app) as test_client:
         yield test_client
 
@@ -43,10 +44,8 @@ def client():
 @pytest.fixture
 def fake_supabase(monkeypatch):
 
-    # Keep the real AsyncClient constructor
-    original_client = httpx.AsyncClient
-
     # Replace production settings with test values
+
     monkeypatch.setattr(
         security,
         "get_settings",
@@ -55,6 +54,7 @@ def fake_supabase(monkeypatch):
             supabase_publishable_key="test-key",
         ),
     )
+
 
     def setup(
         status_code=200,
@@ -65,15 +65,23 @@ def fake_supabase(monkeypatch):
 
         requests = []
 
-        # Simulate Supabase's HTTP response
+
+        # Simulate Supabase HTTP response
+
         def handler(request):
 
             requests.append(request)
+
+            if request.url.path != "/auth/v1/user":
+                raise AssertionError(
+                    f"Unexpected HTTP request: {request.url}"
+                )
 
             if exception is not None:
                 raise exception(request)
 
             if raw_text is not None:
+
                 return httpx.Response(
                     status_code,
                     text=raw_text,
@@ -81,22 +89,40 @@ def fake_supabase(monkeypatch):
 
             return httpx.Response(
                 status_code,
-                json=TEST_USER if payload is None else payload,
+                json=(
+                    TEST_USER
+                    if payload is None
+                    else payload
+                ),
             )
 
-        # Replace outgoing AsyncClient network transport
-        def mocked_client(*args, **kwargs):
 
-            return original_client(
-                *args,
-                transport=httpx.MockTransport(handler),
-                **kwargs,
-            )
+        # ==========================================
+        # MOCK SHARED HTTPX CLIENT REQUESTS
+        # ==========================================
+
+        original_send = httpx.AsyncClient.send
+
+        async def mocked_send(
+            self,
+            request,
+            **kwargs,
+        ):
+
+            async with httpx.AsyncClient(
+                transport=httpx.MockTransport(handler)
+            ) as mock_client:
+
+                return await original_send(
+                    mock_client,
+                    request,
+                    **kwargs,
+                )
 
         monkeypatch.setattr(
-            security.httpx,
-            "AsyncClient",
-            mocked_client,
+            httpx.AsyncClient,
+            "send",
+            mocked_send,
         )
 
         return requests
@@ -146,6 +172,7 @@ def test_missing_or_malformed_token(
     assert response.headers["www-authenticate"] == "Bearer"
 
     # No Supabase request should be necessary
+
     assert len(requests) == 0
 
 
@@ -170,7 +197,8 @@ def test_valid_token(client, fake_supabase):
     assert data["user_id"] == TEST_USER["id"]
     assert data["email"] == TEST_USER["email"]
 
-    # Check the request sent to Supabase
+    # Check request sent to Supabase
+
     assert len(requests) == 1
 
     request = requests[0]
@@ -200,7 +228,9 @@ def test_invalid_token(
 
     fake_supabase(
         status_code=upstream_status,
-        payload={"message": "Invalid credentials"},
+        payload={
+            "message": "Invalid credentials"
+        },
     )
 
     response = client.get(
@@ -244,7 +274,9 @@ def test_supabase_rate_limit(
 
     fake_supabase(
         status_code=429,
-        payload={"message": "Too many requests"},
+        payload={
+            "message": "Too many requests"
+        },
     )
 
     response = client.get(
@@ -314,7 +346,9 @@ def test_supabase_server_error(
 
     fake_supabase(
         status_code=500,
-        payload={"message": "Internal server error"},
+        payload={
+            "message": "Internal server error"
+        },
     )
 
     response = client.get(
