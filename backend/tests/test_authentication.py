@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 from app.core import security
-
+import jwt
 
 # ==========================================
 # TEST DATA
@@ -21,8 +21,17 @@ TEST_USER = {
 
 AUTH_ENDPOINT = "/api/v1/auth-check"
 
+TEST_TOKEN = jwt.encode(
+    {
+        "sub": TEST_USER["id"],
+        "role": "authenticated",
+    },
+    "fitverse-test-only-secret-key-123456",
+    algorithm="HS256",
+)
+
 VALID_HEADERS = {
-    "Authorization": "Bearer fake-valid-token"
+    "Authorization": f"Bearer {TEST_TOKEN}"
 }
 
 
@@ -208,7 +217,7 @@ def test_valid_token(client, fake_supabase):
     assert request.headers["apikey"] == "test-key"
 
     assert request.headers["authorization"] == (
-        "Bearer fake-valid-token"
+    f"Bearer {TEST_TOKEN}"
     )
 
 

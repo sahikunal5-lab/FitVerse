@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 import httpx
 import pytest
-
+import jwt
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -18,7 +18,14 @@ from app.repositories import profile_repository
 USER_A = "e72c0c15-2e33-472d-81c3-cdb6f897bc5d"
 USER_B = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 
-TOKEN = "fake-test-token"
+TOKEN = jwt.encode(
+    {
+        "sub": USER_A,
+        "role": "authenticated",
+    },
+    "fitverse-test-only-secret-key-123456",
+    algorithm="HS256",
+)
 
 API_PATH = "/api/v1/me"
 
