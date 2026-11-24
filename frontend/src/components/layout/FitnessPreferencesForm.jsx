@@ -9,10 +9,14 @@ import {
 } from "lucide-react";
 
 import {
-  fetchFitnessProfile,
-  saveFitnessProfile,
-} from "../../services/authenticatedApi";
+  getCachedFitnessProfile,
+  saveCachedFitnessProfile,
+} from "../../services/profileCache";
 
+
+// ==========================================
+// EMPTY FITNESS FORM
+// ==========================================
 
 const emptyForm = {
   age: "",
@@ -24,7 +28,12 @@ const emptyForm = {
 };
 
 
+// ==========================================
+// CONVERT API DATA TO FORM VALUES
+// ==========================================
+
 function toFormValues(data) {
+
   if (!data) return { ...emptyForm };
 
   return {
@@ -35,10 +44,22 @@ function toFormValues(data) {
     experience_level: data.experience_level ?? "",
     activity_level: data.activity_level ?? "",
   };
+
 }
 
 
-function optionalNumber(value, label, min, max, integer = false) {
+// ==========================================
+// VALIDATE OPTIONAL NUMERIC INPUTS
+// ==========================================
+
+function optionalNumber(
+  value,
+  label,
+  min,
+  max,
+  integer = false
+) {
+
   if (value.trim() === "") return null;
 
   const number = Number(value);
@@ -54,7 +75,9 @@ function optionalNumber(value, label, min, max, integer = false) {
   }
 
   if (integer && !Number.isInteger(number)) {
-    throw new Error(`${label} must be a whole number.`);
+    throw new Error(
+      `${label} must be a whole number.`
+    );
   }
 
   if (
@@ -70,8 +93,18 @@ function optionalNumber(value, label, min, max, integer = false) {
 }
 
 
-export default function FitnessPreferencesForm({ onBack }) {
-  const [form, setForm] = useState({ ...emptyForm });
+// ==========================================
+// FITNESS PREFERENCES COMPONENT
+// ==========================================
+
+export default function FitnessPreferencesForm({
+  onBack,
+  userId,
+}) {
+
+  const [form, setForm] = useState({
+    ...emptyForm,
+  });
 
   const [loading, setLoading] = useState(true);
   const [loadFailed, setLoadFailed] = useState(false);
@@ -82,33 +115,57 @@ export default function FitnessPreferencesForm({ onBack }) {
   const [reloadKey, setReloadKey] = useState(0);
 
 
-  // LOAD SAVED FITNESS PREFERENCES
+  // ==========================================
+  // LOAD FITNESS PREFERENCES WITH CACHE
+  // ==========================================
 
   useEffect(() => {
+
     let active = true;
 
     async function loadPreferences() {
+
       setLoading(true);
       setLoadFailed(false);
       setError("");
       setSuccess("");
 
       try {
-        const data = await fetchFitnessProfile();
+
+        // Use cached preferences if available.
+        // Otherwise fetch from FastAPI.
+
+        const data = await getCachedFitnessProfile(
+          userId
+        );
 
         if (active) {
+
           setForm(toFormValues(data));
+
         }
+
       } catch (err) {
+
         if (active) {
+
           setLoadFailed(true);
+
           setError(
-            err.message || "Unable to load fitness preferences."
+            err.message ||
+            "Unable to load fitness preferences."
           );
+
         }
+
       } finally {
-        if (active) setLoading(false);
+
+        if (active) {
+          setLoading(false);
+        }
+
       }
+
     }
 
     loadPreferences();
@@ -116,12 +173,16 @@ export default function FitnessPreferencesForm({ onBack }) {
     return () => {
       active = false;
     };
-  }, [reloadKey]);
+
+  }, [reloadKey, userId]);
 
 
+  // ==========================================
   // UPDATE INPUT VALUES
+  // ==========================================
 
   function handleChange(event) {
+
     const { name, value } = event.target;
 
     setForm((previous) => ({
@@ -131,12 +192,16 @@ export default function FitnessPreferencesForm({ onBack }) {
 
     setError("");
     setSuccess("");
+
   }
 
 
-  // SAVE TO FASTAPI AND SUPABASE
+  // ==========================================
+  // SAVE FITNESS PREFERENCES WITH CACHE
+  // ==========================================
 
   async function handleSubmit(event) {
+
     event.preventDefault();
 
     if (saving || loading || loadFailed) return;
@@ -145,45 +210,97 @@ export default function FitnessPreferencesForm({ onBack }) {
     setSuccess("");
 
     try {
+
+      // 1. Validate inputs
+
       const payload = {
+
         age: optionalNumber(
-          form.age, "Age", 13, 120, true
+          form.age,
+          "Age",
+          13,
+          120,
+          true
         ),
 
         height_cm: optionalNumber(
-          form.height_cm, "Height", 50, 250
+          form.height_cm,
+          "Height",
+          50,
+          250
         ),
 
         weight_kg: optionalNumber(
-          form.weight_kg, "Weight", 10, 400
+          form.weight_kg,
+          "Weight",
+          10,
+          400
         ),
 
-        fitness_goal: form.fitness_goal || null,
-        experience_level: form.experience_level || null,
-        activity_level: form.activity_level || null,
+        fitness_goal:
+          form.fitness_goal || null,
+
+        experience_level:
+          form.experience_level || null,
+
+        activity_level:
+          form.activity_level || null,
+
       };
+
+
+      // 2. Start saving
 
       setSaving(true);
 
-      const saved = await saveFitnessProfile(payload);
+
+      // 3. Save to FastAPI and update cache
+
+      const saved = await saveCachedFitnessProfile(
+        userId,
+        payload
+      );
+
+
+      // 4. Update form with saved response
 
       setForm(toFormValues(saved));
-      setSuccess("Fitness preferences saved successfully.");
+
+
+      // 5. Show success message
+
+      setSuccess(
+        "Fitness preferences saved successfully."
+      );
 
     } catch (err) {
+
       setError(
-        err.message || "Unable to save fitness preferences."
+        err.message ||
+        "Unable to save fitness preferences."
       );
+
     } finally {
+
       setSaving(false);
+
     }
+
   }
 
 
+  // ==========================================
+  // USER INTERFACE
+  // ==========================================
+
   return (
+
     <section className="fv-fitness-view">
 
+      {/* HEADER */}
+
       <div className="fv-fitness-heading">
+
         <button
           type="button"
           className="fv-fitness-back"
@@ -198,32 +315,62 @@ export default function FitnessPreferencesForm({ onBack }) {
           <h3>Fitness Preferences</h3>
           <p>Personalize your FitVerse experience</p>
         </div>
+
       </div>
 
+
+      {/* LOADING */}
+
       {loading ? (
-        <p className="fv-fitness-message" role="status">
+
+        <p
+          className="fv-fitness-message"
+          role="status"
+        >
           Loading your preferences...
         </p>
+
       ) : loadFailed ? (
-        <div className="fv-fitness-message" role="alert">
+
+        /* API ERROR */
+
+        <div
+          className="fv-fitness-message"
+          role="alert"
+        >
+
           <p>{error}</p>
 
           <button
             type="button"
             className="fv-fitness-retry"
-            onClick={() => setReloadKey((n) => n + 1)}
+            onClick={() =>
+              setReloadKey((n) => n + 1)
+            }
           >
+
             <RefreshCw size={15} />
             Retry
+
           </button>
+
         </div>
+
       ) : (
+
+        /* FITNESS PREFERENCES FORM */
+
         <form onSubmit={handleSubmit}>
 
           <div className="fv-fitness-grid">
 
+
+            {/* AGE */}
+
             <label className="fv-fitness-field">
+
               <span>Age</span>
+
               <input
                 type="number"
                 name="age"
@@ -235,10 +382,16 @@ export default function FitnessPreferencesForm({ onBack }) {
                 onChange={handleChange}
                 disabled={saving}
               />
+
             </label>
 
+
+            {/* HEIGHT */}
+
             <label className="fv-fitness-field">
+
               <span>Height (cm)</span>
+
               <input
                 type="number"
                 name="height_cm"
@@ -250,10 +403,16 @@ export default function FitnessPreferencesForm({ onBack }) {
                 onChange={handleChange}
                 disabled={saving}
               />
+
             </label>
 
+
+            {/* WEIGHT */}
+
             <label className="fv-fitness-field">
+
               <span>Weight (kg)</span>
+
               <input
                 type="number"
                 name="weight_kg"
@@ -265,80 +424,168 @@ export default function FitnessPreferencesForm({ onBack }) {
                 onChange={handleChange}
                 disabled={saving}
               />
+
             </label>
 
+
+            {/* FITNESS GOAL */}
+
             <label className="fv-fitness-field">
+
               <span>Fitness Goal</span>
+
               <select
                 name="fitness_goal"
                 value={form.fitness_goal}
                 onChange={handleChange}
                 disabled={saving}
               >
+
                 <option value="">Not set</option>
-                <option value="weight_loss">Weight Loss</option>
-                <option value="muscle_gain">Muscle Gain</option>
-                <option value="maintenance">Maintenance</option>
-                <option value="general_fitness">General Fitness</option>
+
+                <option value="weight_loss">
+                  Weight Loss
+                </option>
+
+                <option value="muscle_gain">
+                  Muscle Gain
+                </option>
+
+                <option value="maintenance">
+                  Maintenance
+                </option>
+
+                <option value="general_fitness">
+                  General Fitness
+                </option>
+
               </select>
+
             </label>
 
+
+            {/* EXPERIENCE LEVEL */}
+
             <label className="fv-fitness-field">
+
               <span>Experience Level</span>
+
               <select
                 name="experience_level"
                 value={form.experience_level}
                 onChange={handleChange}
                 disabled={saving}
               >
+
                 <option value="">Not set</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
+
+                <option value="beginner">
+                  Beginner
+                </option>
+
+                <option value="intermediate">
+                  Intermediate
+                </option>
+
+                <option value="advanced">
+                  Advanced
+                </option>
+
               </select>
+
             </label>
 
+
+            {/* ACTIVITY LEVEL */}
+
             <label className="fv-fitness-field">
+
               <span>Activity Level</span>
+
               <select
                 name="activity_level"
                 value={form.activity_level}
                 onChange={handleChange}
                 disabled={saving}
               >
+
                 <option value="">Not set</option>
-                <option value="sedentary">Sedentary</option>
-                <option value="lightly_active">Lightly Active</option>
-                <option value="moderately_active">Moderately Active</option>
-                <option value="very_active">Very Active</option>
+
+                <option value="sedentary">
+                  Sedentary
+                </option>
+
+                <option value="lightly_active">
+                  Lightly Active
+                </option>
+
+                <option value="moderately_active">
+                  Moderately Active
+                </option>
+
+                <option value="very_active">
+                  Very Active
+                </option>
+
               </select>
+
             </label>
 
           </div>
 
+
+          {/* ERROR MESSAGE */}
+
           {error && (
-            <p className="fv-fitness-error" role="alert">
+
+            <p
+              className="fv-fitness-error"
+              role="alert"
+            >
+
               {error}
+
             </p>
+
           )}
 
+
+          {/* SUCCESS MESSAGE */}
+
           {success && (
-            <p className="fv-fitness-success" role="status">
+
+            <p
+              className="fv-fitness-success"
+              role="status"
+            >
+
               <CheckCircle2 size={17} />
+
               {success}
+
             </p>
+
           )}
+
+
+          {/* SAVE BUTTON */}
 
           <button
             type="submit"
             className="fv-fitness-save"
             disabled={saving}
           >
+
             <Save size={18} />
-            {saving ? "Saving..." : "Save Preferences"}
+
+            {saving
+              ? "Saving..."
+              : "Save Preferences"}
+
           </button>
 
         </form>
+
       )}
 
     </section>

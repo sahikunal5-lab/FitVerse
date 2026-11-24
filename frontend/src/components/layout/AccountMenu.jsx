@@ -11,7 +11,12 @@ import {
 } from "lucide-react";
 
 import { signOut } from "../../features/auth/authService";
-import { fetchMyProfile } from "../../services/authenticatedApi";
+
+import {
+  getCachedAccountProfile,
+  clearProfileCaches,
+} from "../../services/profileCache";
+
 import FitnessPreferencesForm from "./FitnessPreferencesForm";
 
 
@@ -23,14 +28,22 @@ export default function AccountMenu({
   const navigate = useNavigate();
   const menuRef = useRef(null);
 
+  // =====================================
+  // STATE
+  // =====================================
+
   const [open, setOpen] = useState(false);
+
   const [profile, setProfile] = useState(null);
+
   const [loading, setLoading] = useState(false);
+
   const [loggingOut, setLoggingOut] = useState(false);
+
   const [error, setError] = useState("");
 
-  // Controls which popup content is displayed
-  const [showPreferences, setShowPreferences] = useState(false);
+  const [showPreferences, setShowPreferences] =
+    useState(false);
 
 
   // =====================================
@@ -53,18 +66,22 @@ export default function AccountMenu({
   function toggleAccountMenu() {
 
     if (open) {
+
       closeAccountMenu();
+
     } else {
+
       setShowPreferences(false);
       setError("");
       setOpen(true);
+
     }
 
   }
 
 
   // =====================================
-  // FETCH USER PROFILE
+  // FETCH USER PROFILE WITH CACHE
   // =====================================
 
   useEffect(() => {
@@ -76,29 +93,36 @@ export default function AccountMenu({
     async function loadProfile() {
 
       setLoading(true);
-      setProfile(null);
 
       try {
 
-        const data = await fetchMyProfile();
+        // Reuse cached data if available.
+        // Otherwise fetch from FastAPI.
+
+        const data = await getCachedAccountProfile(
+          user.id
+        );
 
         if (active) {
 
+          // Display only the authenticated user's data.
+
           if (data?.id === user.id) {
+
             setProfile(data);
+
           } else {
+
             setProfile(null);
+
           }
 
         }
 
       } catch {
 
-        // Use email fallback if API fails
-
-        if (active) {
-          setProfile(null);
-        }
+        // Keep existing valid profile on network errors.
+        // Email fallback is used if no profile is available.
 
       } finally {
 
@@ -120,7 +144,7 @@ export default function AccountMenu({
 
 
   // =====================================
-  // CLOSE WHEN CLICKING OUTSIDE OR ESCAPE
+  // CLOSE ON OUTSIDE CLICK OR ESCAPE
   // =====================================
 
   useEffect(() => {
@@ -134,9 +158,7 @@ export default function AccountMenu({
         !menuRef.current.contains(event.target)
       ) {
 
-        setOpen(false);
-        setShowPreferences(false);
-        setError("");
+        closeAccountMenu();
 
       }
 
@@ -146,9 +168,7 @@ export default function AccountMenu({
 
       if (event.key === "Escape") {
 
-        setOpen(false);
-        setShowPreferences(false);
-        setError("");
+        closeAccountMenu();
 
       }
 
@@ -186,18 +206,25 @@ export default function AccountMenu({
   // =====================================
 
   const displayName =
-    (profile?.id === user?.id
-      ? profile?.full_name?.trim()
-      : null) ||
+
+    (
+      profile?.id === user?.id
+        ? profile?.full_name?.trim()
+        : null
+    ) ||
+
     user?.email?.split("@")[0] ||
+
     "FitVerse Member";
 
-  const initial =
-    displayName.charAt(0).toUpperCase();
+
+  const initial = displayName
+    .charAt(0)
+    .toUpperCase();
 
 
   // =====================================
-  // LOGOUT FUNCTION
+  // LOGOUT WITH CACHE CLEANUP
   // =====================================
 
   async function handleLogout() {
@@ -209,11 +236,21 @@ export default function AccountMenu({
 
     try {
 
+      // 1. Sign out from Supabase
       await signOut();
 
+      // 2. Clear cached profile and fitness data
+      clearProfileCaches();
+
+      // 3. Clear component's user data
+      setProfile(null);
+
+      // 4. Close popup and mobile menu
       closeAccountMenu();
+
       closeMobileMenu?.();
 
+      // 5. Return to homepage
       navigate("/", { replace: true });
 
     } catch (err) {
@@ -232,7 +269,7 @@ export default function AccountMenu({
 
 
   // =====================================
-  // UI
+  // USER INTERFACE
   // =====================================
 
   return (
@@ -242,7 +279,7 @@ export default function AccountMenu({
       ref={menuRef}
     >
 
-      {/* NAVBAR AVATAR BUTTON */}
+      {/* NAVBAR AVATAR */}
 
       <button
         type="button"
@@ -261,7 +298,7 @@ export default function AccountMenu({
       </button>
 
 
-      {/* GOOGLE-STYLE ACCOUNT POPUP */}
+      {/* GOOGLE STYLE ACCOUNT POPUP */}
 
       {open && (
 
@@ -290,27 +327,27 @@ export default function AccountMenu({
           </div>
 
 
-          {/* ==================================
-              CONDITIONAL POPUP CONTENT
-          ================================== */}
+          {/* =====================================
+              FITNESS PREFERENCES OR ACCOUNT MENU
+          ===================================== */}
 
           {showPreferences ? (
 
-            // FITNESS PREFERENCES FORM
-
             <FitnessPreferencesForm
+
+              userId={user?.id}
+
               onBack={() => {
                 setShowPreferences(false);
               }}
+
             />
 
           ) : (
 
-            // NORMAL ACCOUNT MENU
-
             <>
 
-              {/* USER INFORMATION */}
+              {/* USER DETAILS */}
 
               <div className="fv-account-user">
 
@@ -326,7 +363,7 @@ export default function AccountMenu({
 
                   <p>{user?.email}</p>
 
-                  {loading && (
+                  {loading && !profile && (
                     <small>
                       Loading profile...
                     </small>
