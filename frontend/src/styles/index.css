@@ -175,7 +175,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
     box-sizing: border-box;
 }
 
-
 /* =========================================
    HERO SECTION
 ========================================= */
@@ -240,7 +239,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
     pointer-events: none;
 }
 
-
 /* =========================================
    AI FITNESS BADGE
 ========================================= */
@@ -284,7 +282,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
         box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
     }
 }
-
 
 /* =========================================
    HERO HEADING
@@ -347,7 +344,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
     letter-spacing: 0.3px;
 }
 
-
 /* =========================================
    MAIN WORKOUT PANEL
 ========================================= */
@@ -368,50 +364,59 @@ button:disabled { cursor: not-allowed; opacity: .6; }
         0 15px 40px rgba(15, 23, 42, 0.07);
 }
 
-
 /* =========================================
    CAMERA PREVIEW
 ========================================= */
 
+/* One shared preview: video and transparent skeleton are stacked. */
 .workout-page .camera-preview {
     position: relative;
+    display: block;
+    isolation: isolate;
     width: 100%;
     aspect-ratio: 16 / 9;
-
     overflow: hidden;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: radial-gradient(
-        ellipse at center,
-        #243449,
-        #0f172a 80%
-    );
-
+    background: radial-gradient(ellipse at center, #243449, #0f172a 80%);
     border: 1px solid #334155;
     border-radius: 18px;
-
     box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.2);
 }
 
-
-/* Live camera video */
-
-.workout-page .camera-video {
+/* Match the box, crop and mirror on both layers. */
+.workout-page .camera-preview > video.camera-video,
+.workout-page .camera-preview > canvas.pose-overlay {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
-
-    object-fit: contain;
-
-    background: #0f172a;
-
-    /* Mirror the camera like a selfie */
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    object-fit: cover;
+    object-position: center;
     transform: scaleX(-1);
 }
 
+.workout-page .camera-preview > video.camera-video {
+    background: #0f172a;
+    z-index: 1;
+}
+
+.workout-page .camera-preview > canvas.pose-overlay {
+    background: transparent;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Uploaded videos keep their complete frame and are not mirrored. */
+.workout-page .camera-preview.upload-preview > video.camera-video,
+.workout-page .camera-preview.upload-preview > canvas.pose-overlay {
+    object-fit: contain;
+    transform: none;
+}
 
 /* =========================================
    CAMERA OFF PLACEHOLDER
@@ -420,6 +425,7 @@ button:disabled { cursor: not-allowed; opacity: .6; }
 .workout-page .camera-placeholder {
     position: absolute;
     inset: 0;
+    z-index: 3;
 
     display: flex;
     flex-direction: column;
@@ -468,20 +474,19 @@ button:disabled { cursor: not-allowed; opacity: .6; }
     color: #94a3b8;
 }
 
-
 /* =========================================
    CAMERA ACTIONS
 ========================================= */
 
 .workout-page .camera-actions {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 
     gap: 14px;
     margin: 25px 0;
 }
-
 
 /* Start camera button */
 
@@ -530,7 +535,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
     cursor: not-allowed;
 }
 
-
 /* Stop camera button */
 
 .workout-page .secondary-button {
@@ -576,7 +580,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
     outline-offset: 4px;
 }
 
-
 /* =========================================
    PRIVACY NOTE
 ========================================= */
@@ -612,7 +615,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
     color: #16a34a;
 }
 
-
 /* =========================================
    DEVELOPMENT PHASE NOTE
 ========================================= */
@@ -630,7 +632,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
     font-size: 13px;
     line-height: 1.7;
 }
-
 
 /* =========================================
    CAMERA ERROR MESSAGE
@@ -651,7 +652,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
     font-weight: 500;
     line-height: 1.6;
 }
-
 
 /* =========================================
    TABLET RESPONSIVE DESIGN
@@ -675,7 +675,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
         letter-spacing: -1.5px;
     }
 }
-
 
 /* =========================================
    MOBILE RESPONSIVE DESIGN
@@ -757,6 +756,158 @@ button:disabled { cursor: not-allowed; opacity: .6; }
     }
 }
 
+/* ==========================================
+   WORKOUT MODE SELECTOR
+========================================== */
+
+.workout-page .workout-mode-selector {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    width: fit-content;
+    max-width: 100%;
+
+    margin: 0 auto 24px;
+    padding: 6px;
+
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+}
+
+.workout-page .workout-mode-button {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    padding: 13px 26px;
+
+    color: #64748b;
+    background: transparent;
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.workout-page .workout-mode-button:hover {
+
+    color: #059669;
+    background: #ecfdf5;
+}
+
+.workout-page .workout-mode-button.active {
+
+    color: #ffffff;
+
+    background: linear-gradient(
+        135deg,
+        #16a34a,
+        #047857
+    );
+
+    box-shadow:
+        0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+/* ==========================================
+   UPLOADED FILE INFORMATION
+========================================== */
+
+.workout-page .uploaded-file-info {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    width: fit-content;
+    max-width: 100%;
+
+    margin: 12px auto;
+    padding: 12px 20px;
+
+    color: #047857;
+    background: #ecfdf5;
+
+    border: 1px solid #a7f3d0;
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.workout-page .uploaded-file-info svg {
+
+    flex-shrink: 0;
+}
+
+.workout-page .uploaded-file-info span {
+
+    min-width: 0;
+
+    overflow-wrap: anywhere;
+}
+
+.workout-page .video-format-note {
+
+    margin: 12px 0 22px;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    text-align: center;
+}
+
+/* ==========================================
+   MOBILE RESPONSIVE DESIGN
+========================================== */
+
+@media (max-width: 600px) {
+
+    .workout-page .workout-mode-selector {
+
+        width: 100%;
+        box-sizing: border-box;
+
+        gap: 6px;
+    }
+
+    .workout-page .workout-mode-button {
+
+        flex: 1;
+
+        padding: 12px 8px;
+
+        gap: 6px;
+
+        font-size: 12px;
+    }
+
+    .workout-page .workout-mode-button svg {
+
+        width: 17px;
+        height: 17px;
+    }
+}
 
 /* =========================================
    ACCESSIBILITY
@@ -779,6 +930,321 @@ button:disabled { cursor: not-allowed; opacity: .6; }
     }
 }
 
+/* ==========================================
+   WORKOUT CONFIGURATION PANEL
+========================================== */
+
+.workout-page .workout-plan {
+
+    padding: 26px;
+    margin-bottom: 24px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+}
+
+.workout-page .workout-plan-heading {
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.workout-page .workout-plan-icon {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    background: #ecfdf5;
+    color: #059669;
+
+    border-radius: 13px;
+}
+
+.workout-page .workout-plan-heading h2 {
+
+    margin: 0 0 5px;
+
+    color: #0f172a;
+
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.workout-page .workout-plan-heading p {
+
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+/* ==========================================
+   WORKOUT PLAN INPUTS
+========================================== */
+
+.workout-page .workout-plan-grid {
+
+    display: grid;
+
+    grid-template-columns: 2fr 1fr 1fr;
+
+    gap: 18px;
+}
+
+.workout-page .workout-plan-field {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 9px;
+
+    min-width: 0;
+}
+
+.workout-page .workout-plan-field label {
+
+    color: #334155;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.workout-page .workout-plan-field input,
+.workout-page .workout-plan-field select {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    min-height: 48px;
+
+    padding: 12px 14px;
+
+    background: #f8fafc;
+    color: #0f172a;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.workout-page .workout-plan-field input:focus,
+.workout-page .workout-plan-field select:focus {
+
+    border-color: #10b981;
+
+    box-shadow:
+        0 0 0 3px rgba(16, 185, 129, 0.12);
+}
+
+.workout-page .workout-plan-field input:disabled,
+.workout-page .workout-plan-field select:disabled {
+
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ==========================================
+   WORKOUT INFORMATION
+========================================== */
+
+.workout-page .workout-plan-summary {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-top: 24px;
+    padding: 18px;
+
+    background: #f0fdf4;
+
+    border: 1px solid #d1fae5;
+    border-radius: 12px;
+}
+
+.workout-page .workout-plan-stat {
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    color: #059669;
+}
+
+.workout-page .workout-plan-stat svg {
+
+    flex-shrink: 0;
+}
+
+.workout-page .workout-plan-stat div {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.workout-page .workout-plan-stat span {
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+.workout-page .workout-plan-stat strong {
+
+    color: #065f46;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+/* ==========================================
+   RESPONSIVE WORKOUT CONFIGURATION
+========================================== */
+
+@media (max-width: 700px) {
+
+    .workout-page .workout-plan {
+
+        padding: 18px;
+    }
+
+    .workout-page .workout-plan-grid {
+
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .workout-page .workout-plan-field:first-child {
+
+        grid-column: 1 / -1;
+    }
+
+    .workout-page .workout-plan-summary {
+
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+    }
+
+    .workout-page .workout-plan-heading h2 {
+
+        font-size: 18px;
+    }
+}
+
+/* ==========================================
+   AI POSE DETECTION STATUS
+========================================== */
+
+.workout-page .pose-status-panel {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-top: 18px;
+}
+
+.workout-page .pose-status-item {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    padding: 18px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+.workout-page .pose-status-item span {
+
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.workout-page .pose-status-item strong {
+
+    color: #0f172a;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.workout-page .pose-status-value.ready {
+
+    color: #059669;
+}
+
+.workout-page .pose-status-value.loading {
+
+    color: #d97706;
+}
+
+.workout-page .pose-status-value.waiting,
+.workout-page .pose-status-value.idle {
+
+    color: #64748b;
+}
+
+.workout-page .pose-status-value.error {
+
+    color: #dc2626;
+}
+
+@media (max-width: 700px) {
+
+    .workout-page .pose-status-panel {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .workout-page .pose-status-item {
+
+        padding: 14px;
+    }
+
+    .workout-page .pose-status-item strong {
+
+        font-size: 14px;
+    }
+}
 
 /* =========================================
    FITVERSE COMPACT PROFILE CARD
@@ -1008,7 +1474,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
   }
 }
 
-
 /* ===================================
    FITVERSE GOOGLE-STYLE ACCOUNT MENU
 =================================== */
@@ -1220,8 +1685,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
   outline-offset: 3px;
 }
 
-
-
 /* ==========================================
    FITVERSE FITNESS PREFERENCES FORM
 ========================================== */
@@ -1393,7 +1856,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
   cursor: pointer;
 }
 
-
 /* MOBILE */
 
 @media (max-width: 600px) {
@@ -1404,7 +1866,6 @@ button:disabled { cursor: not-allowed; opacity: .6; }
     border-radius: 18px;
   }
 }
-
 
 @media (max-width: 1150px) {
   .nav-links { gap: 15px; }
@@ -1451,4 +1912,371 @@ button:disabled { cursor: not-allowed; opacity: .6; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .button, .feature-card { transition: none; }
+}
+
+
+
+
+/* Professional exercise analysis dashboard */
+.workout-page .fv-analysis {
+  margin-top: 24px;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  box-shadow: 0 12px 32px #0f172a09;
+  color: #0f172a;
+}
+.workout-page .fv-analysis-header,
+.workout-page .fv-analysis-title {
+  display: flex; align-items: center; gap: 14px;
+}
+.workout-page .fv-analysis-header {
+  justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px;
+}
+.workout-page .fv-analysis-icon {
+  display: grid; place-items: center; flex-shrink: 0;
+  width: 48px; height: 48px; border-radius: 14px;
+  color: #047857; background: #dcfce7;
+}
+.workout-page .fv-analysis-title h2 { margin: 0; font-size: 22px; letter-spacing: -.5px; }
+.workout-page .fv-analysis-title p { margin: 5px 0 0; color: #64748b; font-size: 13px; }
+.workout-page .fv-analysis-status {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 12px; border-radius: 99px;
+  background: #f1f5f9; color: #475569; font-size: 12px; font-weight: 650;
+}
+.workout-page .fv-analysis-status > span { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.workout-page .fv-analysis-status.active { background: #dcfce7; color: #047857; }
+.workout-page .fv-rep-hero {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  padding: 26px; border-radius: 19px; color: #fff;
+  background: linear-gradient(135deg, #064e3b, #047857);
+  box-shadow: 0 10px 24px #04785720;
+}
+.workout-page .fv-rep-kicker { margin: 0 0 10px; color: #a7f3d0; font-size: 11px; font-weight: 750; letter-spacing: 1.6px; }
+.workout-page .fv-rep-number { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+.workout-page .fv-rep-number strong { font-size: clamp(38px, 5vw, 58px); line-height: 1; letter-spacing: -2px; font-variant-numeric: tabular-nums; }
+.workout-page .fv-rep-number span { color: #d1fae5; font-size: 16px; }
+.workout-page .fv-rep-note { margin: 12px 0 5px; color: #fff; font-size: 14px; }
+.workout-page .fv-rep-hero small { color: #a7f3d0; font-size: 12px; }
+.workout-page .fv-rep-ring {
+  width: 120px; aspect-ratio: 1; flex-shrink: 0; padding: 8px;
+  border-radius: 50%; display: grid; place-items: center;
+  background: conic-gradient(#86efac var(--progress), #ffffff30 0);
+}
+.workout-page .fv-rep-ring > div {
+  width: 100%; height: 100%; border-radius: 50%; background: #065f46;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+}
+.workout-page .fv-rep-ring strong { font-size: 26px; font-variant-numeric: tabular-nums; }
+.workout-page .fv-analysis-grid {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 18px;
+}
+.workout-page .fv-analysis-card {
+  display: flex; flex-direction: column; gap: 9px; min-width: 0;
+  padding: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 15px;
+}
+.workout-page .fv-analysis-label { display: flex; align-items: center; gap: 7px; color: #475569; font-size: 12px; font-weight: 600; }
+.workout-page .fv-analysis-label svg { color: #059669; flex-shrink: 0; }
+.workout-page .fv-analysis-card > strong { font-size: 24px; line-height: 1.2; font-weight: 800; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.workout-page .fv-analysis-card > small,
+.workout-page .fv-feedback-row small { display: block; color: #64748b; font-size: 12px; line-height: 1.5; }
+.workout-page .fv-feedback { margin-top: 20px; padding: 18px; border: 1px solid #e2e8f0; border-radius: 16px; }
+.workout-page .fv-feedback h3 { display: flex; align-items: center; gap: 9px; margin: 0 0 10px; font-size: 16px; }
+.workout-page .fv-feedback h3 svg { color: #059669; }
+.workout-page .fv-feedback-row { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-top: 1px solid #e2e8f0; }
+.workout-page .fv-feedback-row > svg { flex-shrink: 0; color: #64748b; }
+.workout-page .fv-feedback-row > div { flex: 1; min-width: 0; }
+.workout-page .fv-feedback-row strong { display: block; margin-bottom: 4px; font-size: 14px; }
+.workout-page .fv-feedback-row > span { flex-shrink: 0; padding: 6px 10px; border-radius: 99px; background: #f1f5f9; color: #475569; font-size: 11px; font-weight: 700; }
+.workout-page .fv-feedback-row.good > svg { color: #059669; }
+.workout-page .fv-feedback-row.good > span { color: #047857; background: #dcfce7; }
+.workout-page .fv-feedback-row.warn > svg { color: #b45309; }
+.workout-page .fv-feedback-row.warn > span { color: #92400e; background: #fef3c7; }
+.workout-page .fv-analysis-footer { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 18px 0 0; font-size: 12px; color: #64748b; }
+.workout-page .fv-analysis-footer svg { flex-shrink: 0; color: #059669; }
+
+
+/* Append to index.css once. Keep the existing fv-analysis and pose-overlay rules. */
+.workout-page .fv-coach-message {
+    margin: 20px 0;
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #94a3b8;
+    background: #f1f5f9;
+    color: #475569;
+}
+.workout-page .fv-coach-heading {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-bottom: 9px;
+}
+.workout-page .fv-coach-message h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 750;
+    color: inherit;
+}
+.workout-page .fv-coach-message p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: inherit;
+}
+.workout-page .fv-coach-status {
+    margin-left: auto;
+    padding: 5px 10px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+}
+.workout-page .fv-coach-message.success {
+    background: #ecfdf5;
+    border-color: #bbf7d0;
+    border-left-color: #16a34a;
+    color: #166534;
+}
+.workout-page .fv-coach-message.error {
+    background: #fef2f2;
+    border-color: #fecaca;
+    border-left-color: #ef4444;
+    color: #b91c1c;
+}
+
+
+
+@media (max-width: 600px) {
+    .workout-page .fv-coach-message { padding: 14px; }
+    .workout-page .fv-coach-status { margin-left: 0; }
+}
+
+@media (max-width: 850px) {
+  .workout-page .fv-analysis-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .workout-page .fv-analysis { padding: 14px; border-radius: 16px; }
+  .workout-page .fv-analysis-title h2 { font-size: 19px; }
+  .workout-page .fv-rep-hero { padding: 16px; gap: 12px; }
+  .workout-page .fv-rep-ring { width: 88px; padding: 6px; }
+  .workout-page .fv-rep-ring strong { font-size: 20px; }
+  .workout-page .fv-rep-ring small { font-size: 10px; }
+  .workout-page .fv-analysis-card { padding: 12px; }
+  .workout-page .fv-analysis-card > strong { font-size: 20px; }
+  .workout-page .fv-feedback { padding: 12px; }
+}
+@media (max-width: 360px) {
+  .workout-page .fv-rep-hero { flex-wrap: wrap; }
+  .workout-page .fv-analysis-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   FITVERSE LIVE WORKOUT REDESIGN — FINAL COMPONENT STYLES
+   ============================================================ */
+
+/* 1. Page and panel: original 1000px panel, no scroll clipping */
+.workout-page.fv-live-redesign {
+  container-name: fv-workout;
+  container-type: inline-size;
+}
+.workout-page.fv-live-redesign,
+.workout-page.fv-live-redesign .workout-panel {
+  overflow: visible;
+  min-width: 0;
+}
+.workout-page.fv-live-redesign .workout-panel.fv-workout-panel--biceps {
+  max-width: 1000px;
+  width: 100%;
+  padding: 24px;
+}
+
+/* 2. Sticky repetition counter */
+/* Sticky repetition bar: after the tabs, before the camera layout. */
+.workout-page .fv-rep-bar {
+  position: sticky;
+  top: calc(var(--fv-header-offset, 0px) + 8px);
+  z-index: 40; /* Original .site-header is 50. */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(12px, 2vw, 30px);
+  min-width: 0;
+  margin: 0 0 20px;
+  padding: 12px 18px;
+  background: #fff;
+  border: 1px solid #dce7e1;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px #0f172a12;
+  color: #0f172a;
+}
+.workout-page .fv-rep-bar-main { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.workout-page .fv-rep-bar-icon {
+  display: grid; place-items: center; flex: 0 0 46px;
+  width: 46px; height: 46px; color: #047857; background: #e8f7ed; border-radius: 12px;
+}
+.workout-page .fv-rep-bar-copy { min-width: 0; }
+.workout-page .fv-rep-bar-label { display: block; color: #64748b; font-size: 10px; font-weight: 750; letter-spacing: 1px; }
+.workout-page .fv-rep-bar-number { display: flex; align-items: baseline; flex-wrap: wrap; gap: 7px; }
+.workout-page .fv-rep-bar-number strong { color: #047857; font-size: clamp(29px, 3vw, 42px); line-height: 1.05; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+.workout-page .fv-rep-bar-number > span { color: #64748b; font-size: 13px; font-weight: 600; }
+.workout-page .fv-rep-bar-progress { flex: 1 1 260px; min-width: 100px; max-width: 460px; }
+.workout-page .fv-rep-bar-progress-label { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; color: #64748b; margin-bottom: 5px; }
+.workout-page .fv-rep-bar-progress-label strong { color: #047857; font-variant-numeric: tabular-nums; }
+.workout-page .fv-rep-bar-progress progress { display: block; width: 100%; height: 7px; border: 0; border-radius: 999px; background: #e5ece8; color: #16a34a; accent-color: #16a34a; overflow: hidden; }
+.workout-page .fv-rep-bar-progress progress::-webkit-progress-bar { background: #e5ece8; border-radius: 999px; }
+.workout-page .fv-rep-bar-progress progress::-webkit-progress-value { background: #16a34a; border-radius: 999px; }
+.workout-page .fv-rep-bar-progress progress::-moz-progress-bar { background: #16a34a; border-radius: 999px; }
+.workout-page .fv-rep-bar-status { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #475569; background: #f1f5f9; }
+.workout-page .fv-rep-bar-status > span { width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: currentColor; }
+.workout-page .fv-rep-bar-status.good { color: #166534; background: #dcfce7; }
+.workout-page .fv-rep-bar-status.bad { color: #b91c1c; background: #fef2f2; }
+
+/* 3. Camera grid: full width, with cards below by default */
+.workout-page .fv-camera-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+.workout-page .fv-camera-layout--biceps {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-areas: "camera camera" "left right";
+  gap: 16px;
+  align-items: start;
+}
+.workout-page .fv-camera-center { min-width: 0; width: 100%; }
+.workout-page .fv-camera-layout--biceps .fv-camera-center { grid-area: camera; }
+
+/* 4. Side metric groups */
+.workout-page .fv-camera-metrics {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  min-width: 0;
+  width: 100%;
+  align-self: stretch;
+}
+.workout-page .fv-camera-metrics--left { grid-area: left; }
+.workout-page .fv-camera-metrics--right { grid-area: right; }
+
+/* 5. Metric cards */
+.workout-page .fv-camera-metric { display: flex; flex-direction: column; justify-content: center; gap: 10px; min-width: 0; min-height: 145px; padding: 14px; border: 1px solid #e2e8f0; border-radius: 16px; background: #fff; box-shadow: 0 4px 15px #0f172a08; color: #0f172a; transition: border-color 160ms, background-color 160ms, color 160ms; }
+.workout-page .fv-camera-metric-label { display: flex; align-items: center; gap: 8px; color: #475569; font-size: 12px; font-weight: 700; }
+.workout-page .fv-camera-metric-icon { display: grid; place-items: center; width: 34px; height: 34px; flex: 0 0 34px; border-radius: 10px; color: #64748b; background: #f1f5f9; }
+.workout-page .fv-camera-metric-value { font-size: 23px; line-height: 1.14; letter-spacing: -.6px; font-weight: 750; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.workout-page .fv-camera-metric small { color: #64748b; font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
+.workout-page .fv-camera-metric.good { border-color: #bbf7d0; background: #f5fdf7; }
+.workout-page .fv-camera-metric.good .fv-camera-metric-value { color: #166534; }
+.workout-page .fv-camera-metric.good .fv-camera-metric-icon { color: #15803d; background: #dcfce7; }
+.workout-page .fv-camera-metric.bad { border-color: #fecaca; background: #fff7f7; }
+.workout-page .fv-camera-metric.bad .fv-camera-metric-value { color: #b91c1c; }
+.workout-page .fv-camera-metric.bad .fv-camera-metric-icon { color: #b91c1c; background: #fee2e2; }
+.workout-page .fv-camera-metric.neutral .fv-camera-metric-value { color: #64748b; }
+
+/* 6. Shared video / canvas frame. Both use the original matching
+   object-fit and mirror rules in the base stylesheet. */
+.workout-page.fv-live-redesign .fv-camera-layout--biceps .camera-preview.pose-preview {
+  max-height: 78vh;
+  max-height: 78svh;
+}
+/* When a source's aspect ratio is different from the box, show the
+   complete source on both layers, never crop only one layer. */
+.workout-page.fv-live-redesign .fv-camera-layout--biceps .camera-preview.pose-preview > video.camera-video,
+.workout-page.fv-live-redesign .fv-camera-layout--biceps .camera-preview.pose-preview > canvas.pose-overlay {
+  object-fit: contain;
+}
+
+/* 7. AI Personal Coach and form feedback */
+/* Preserve the current coach/feedback appearance; scoped fallback styles
+   also support installations with the older index.css. */
+.workout-page .fv-coach-panel { margin-top: 20px; padding: 18px; border: 1px solid #e2e8f0; border-radius: 18px; background: #fff; box-shadow: 0 4px 14px #0f172a08; }
+.workout-page .fv-coach-panel .fv-coach-message { margin: 0; padding: 16px; border: 1px solid #e2e8f0; border-left: 4px solid #94a3b8; border-radius: 12px; background: #f1f5f9; color: #475569; }
+.workout-page .fv-coach-panel .fv-coach-message.success { background: #ecfdf5; border-color: #bbf7d0; border-left-color: #16a34a; color: #166534; }
+.workout-page .fv-coach-panel .fv-coach-message.error { background: #fef2f2; border-color: #fecaca; border-left-color: #ef4444; color: #b91c1c; }
+.workout-page .fv-coach-panel .fv-coach-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.workout-page .fv-coach-panel .fv-coach-heading h3 { margin: 0; font-size: 15px; color: inherit; }
+.workout-page .fv-coach-panel .fv-coach-status { margin-left: auto; padding: 5px 9px; border: 1px solid currentColor; border-radius: 999px; font-size: 11px; font-weight: 700; }
+.workout-page .fv-coach-panel .fv-coach-message p { margin: 0; font-size: 17px; font-weight: 650; line-height: 1.45; color: inherit; }
+.workout-page .fv-coach-panel .fv-feedback { margin-top: 14px; padding: 14px; border: 1px solid #e2e8f0; border-radius: 12px; }
+.workout-page .fv-coach-panel .fv-feedback h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-size: 15px; }
+.workout-page .fv-coach-panel .fv-feedback h3 svg { color: #059669; }
+.workout-page .fv-coach-panel .fv-feedback-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid #e2e8f0; }
+.workout-page .fv-coach-panel .fv-feedback-row > svg { flex-shrink: 0; color: #64748b; }
+.workout-page .fv-coach-panel .fv-feedback-row > div { flex: 1; min-width: 0; }
+.workout-page .fv-coach-panel .fv-feedback-row strong { display: block; font-size: 14px; }
+.workout-page .fv-coach-panel .fv-feedback-row small { display: block; color: #64748b; font-size: 12px; line-height: 1.45; }
+.workout-page .fv-coach-panel .fv-feedback-row > span { padding: 5px 9px; flex-shrink: 0; font-size: 11px; font-weight: 700; background: #f1f5f9; border-radius: 999px; color: #475569; }
+.workout-page .fv-coach-panel .fv-feedback-row.good > svg, .workout-page .fv-coach-panel .fv-feedback-row.good > span { color: #166534; }
+.workout-page .fv-coach-panel .fv-feedback-row.good > span { background: #dcfce7; }
+.workout-page .fv-coach-panel .fv-feedback-row.warn > svg, .workout-page .fv-coach-panel .fv-feedback-row.warn > span { color: #b91c1c; }
+.workout-page .fv-coach-panel .fv-feedback-row.warn > span { background: #fef2f2; }
+.workout-page .fv-coach-panel .fv-analysis-footer { display: flex; align-items: center; justify-content: center; gap: 7px; color: #64748b; font-size: 12px; margin: 12px 0 0; }
+.workout-page .fv-coach-panel .fv-analysis-footer svg { flex-shrink: 0; color: #059669; }
+
+/* 8. Wide desktop: use empty gutters, never reduce the center width.
+   Content width 1400px leaves (1400 - 950) / 2 = 225px per side.
+   180px card + 32px gap = 212px, with clearance left over. */
+@container fv-workout (min-width: 1400px) {
+  .workout-page .fv-camera-layout--biceps {
+    grid-template-columns: 0 minmax(0, 1fr) 0;
+    grid-template-areas: "left camera right";
+    gap: 0;
+    align-items: center;
+  }
+  .workout-page .fv-camera-layout--biceps .fv-camera-metrics {
+    width: 180px;
+    align-self: center;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .workout-page .fv-camera-metrics--left {
+    justify-self: end;
+    margin-inline-end: 32px;
+  }
+  .workout-page .fv-camera-metrics--right {
+    justify-self: start;
+    margin-inline-start: 32px;
+  }
+}
+
+/* 9. Tablet and mobile */
+@media (max-width: 900px) {
+  .workout-page.fv-live-redesign .workout-panel.fv-workout-panel--biceps {
+    padding: 18px;
+  }
+}
+@media (max-width: 600px) {
+  .workout-page.fv-live-redesign .workout-panel.fv-workout-panel--biceps { padding: 12px; }
+  .workout-page .fv-camera-layout--biceps, .workout-page .fv-camera-metrics { gap: 10px; }
+  .workout-page .fv-camera-metric { min-height: 112px; }
+  .workout-page .fv-coach-panel .fv-coach-status { margin-left: 0; }
+  .workout-page .fv-rep-bar { flex-wrap: wrap; gap: 8px 12px; padding: 10px 12px; top: calc(var(--fv-header-offset, 0px) + 4px); border-radius: 12px; }
+  .workout-page .fv-rep-bar-main { flex: 1 1 auto; }
+  .workout-page .fv-rep-bar-icon { width: 37px; height: 37px; flex-basis: 37px; }
+  .workout-page .fv-rep-bar-icon svg { width: 21px; height: 21px; }
+  .workout-page .fv-rep-bar-progress { order: 3; flex: 1 1 100%; max-width: none; }
+  .workout-page .fv-rep-bar-status { font-size: 10px; padding: 6px 8px; }
+  .workout-page .fv-camera-metric { gap: 7px; padding: 10px; }
+  .workout-page .fv-camera-metric-label { gap: 6px; font-size: 11px; }
+  .workout-page .fv-camera-metric-icon { width: 28px; height: 28px; flex-basis: 28px; }
+  .workout-page .fv-camera-metric-icon svg { width: 17px; height: 17px; }
+  .workout-page .fv-camera-metric-value { font-size: 19px; }
+  .workout-page .fv-camera-metric small { font-size: 11px; }
+  .workout-page .fv-coach-panel { padding: 12px; }
+}
+@media (max-width: 360px) {
+  .workout-page .fv-camera-layout--biceps {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "camera" "left" "right";
+  }
+  .workout-page .fv-camera-metric { min-height: 92px; }
+}
+
+/* 10. Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .workout-page .fv-camera-metric { transition: none; }
 }

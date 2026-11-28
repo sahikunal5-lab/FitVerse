@@ -4,12 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "setup:mediapipe": "node scripts/copy-mediapipe.mjs",
+    "predev": "npm run setup:mediapipe",
+    "prebuild": "npm run setup:mediapipe",
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mediapipe/tasks-vision": "1.2.3",
     "@reduxjs/toolkit": "^2.14.0",
     "@supabase/supabase-js": "^2.119.0",
     "lucide-react": "^1.75.0",
