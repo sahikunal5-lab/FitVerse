@@ -116,10 +116,7 @@ export default function ForgotPasswordPage() {
           <span>.</span>
         </h1>
 
-        <p>
-          Move toward your goals with a smarter
-          fitness and nutrition experience.
-        </p>
+        
 
         <img
           src="/images/hero-athlete.png"

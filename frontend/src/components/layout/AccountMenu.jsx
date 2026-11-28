@@ -215,7 +215,7 @@ export default function AccountMenu({
 
     user?.email?.split("@")[0] ||
 
-    "FitVerse Member";
+    "FitOrbit Member";
 
 
   const initial = displayName
@@ -311,7 +311,7 @@ export default function AccountMenu({
 
           <div className="fv-account-popup-header">
 
-            <h3>FitVerse Account</h3>
+            <h3>FitOrbit Account</h3>
 
             <button
               type="button"

@@ -70,7 +70,23 @@ export default function HomePage() {
           </div>
         </div>
         <div className="hero__visual">
-          <img src="/images/hero-athlete.png" alt="Athlete holding a shaker bottle in a gym" />
+
+          {/* Light Mode Hero Image */}
+
+          <img
+            src="/images/hero-light.png"
+            alt="Athlete holding a fitness shaker"
+            className="fo-hero-image fo-hero-image--light"
+          />
+
+          {/* Dark Mode Hero Image */}
+
+          <img
+            src="/images/hero-athlete.png"
+            alt="Athlete holding a fitness shaker"
+            className="fo-hero-image fo-hero-image--dark"
+          />
+
           <div className="hero__motto" aria-hidden="true">Be Fit<br />Be Strong <span>♥</span></div>
           <div className="hero__pill"><HeartPulse size={19} aria-hidden="true" /> Your goals, your pace</div>
         </div>
@@ -80,7 +96,7 @@ export default function HomePage() {
         <div className="section-intro">
           <div>
             <p className="section-kicker">ONE PLATFORM. EVERY FITNESS GOAL.</p>
-            <h2 id="features-heading">Explore FitVerse</h2>
+            <h2 id="features-heading">Explore FitOrbit</h2>
           </div>
           <p>Everything you need to train, eat and feel better—all in one place.</p>
         </div>
@@ -91,10 +107,10 @@ export default function HomePage() {
 
       <section className="info-section container" id="about">
         <div>
-          <p className="section-kicker">ABOUT FITVERSE</p>
+          <p className="section-kicker">ABOUT FITORBIT</p>
           <h2>Fitness meets smart technology.</h2>
         </div>
-        <p>FitVerse is a student-built AI fitness and nutrition platform. Our aim is to bring exercise guidance, nutrition tools and progress tracking into one user-friendly experience.</p>
+        <p>FitOrbit is a student-built AI fitness and nutrition platform. Our aim is to bring exercise guidance, nutrition tools and progress tracking into one user-friendly experience.</p>
       </section>
 
       <section className="why-section container" id="why-us">
@@ -114,7 +130,7 @@ export default function HomePage() {
         <p>Try the camera preview now or explore our upcoming features.</p>
         <Link to="/workout" className="button button--green">Explore Live Workout <ArrowRight size={18} /></Link>
       </section>
-      <footer className="site-footer">FitVerse <span>♥</span> Smart Fitness · Better Nutrition · Healthier You</footer>
+      <footer className="site-footer">FitOrbit <span>♥</span> Smart Fitness · Better Nutrition · Healthier You</footer>
     </>
   );
 }

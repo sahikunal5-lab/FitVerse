@@ -2280,3 +2280,1097 @@ button:disabled { cursor: not-allowed; opacity: .6; }
 @media (prefers-reduced-motion: reduce) {
   .workout-page .fv-camera-metric { transition: none; }
 }
+
+
+
+/* ==========================================
+   FITVERSE GLOBAL DARK THEME
+   OBSIDIAN + FIERY RED
+   ========================================== */
+
+
+/* ==========================================
+   1. GLOBAL COLOR VARIABLES
+   ========================================== */
+
+:root {
+    color-scheme: dark;
+
+    --fv-bg: #0d0d0f;
+    --fv-surface: #19191d;
+    --fv-surface-deep: #121215;
+    --fv-surface-raised: #242428;
+
+    --fv-accent: #ff4b20;
+    --fv-accent-red: #ff392e;
+    --fv-accent-text: #ff7048;
+    --fv-accent-soft: #351b15;
+    --fv-accent-border: #713425;
+
+    --fv-text: #f6f7f9;
+    --fv-muted: #a1a8b3;
+    --fv-border: #37373e;
+
+    --fv-success: #4ade80;
+    --fv-success-bg: #14281d;
+    --fv-success-border: #28553a;
+
+    --fv-danger: #ff6467;
+    --fv-danger-bg: #321b20;
+    --fv-danger-border: #793439;
+
+    --fv-warning: #fbbf24;
+
+    --fv-shadow: 0 8px 28px #00000040;
+
+    --fv-button: linear-gradient(
+        120deg,
+        #c9320c,
+        #b32118
+    );
+
+    --fv-glow: radial-gradient(
+        ellipse at 95% 95%,
+        #ff4b201c,
+        transparent 55%
+    );
+
+    color: var(--fv-text);
+    background: var(--fv-bg);
+}
+
+body,
+.app-shell {
+    background: var(--fv-bg);
+    color: var(--fv-text);
+}
+
+::selection {
+    background: var(--fv-accent);
+    color: #0d0d0f;
+}
+
+input,
+select,
+textarea {
+    color-scheme: dark;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline-color: var(--fv-accent-text);
+}
+
+
+/* ==========================================
+   2. NAVIGATION BAR
+   ========================================== */
+
+.site-header {
+    background: #101013f5;
+    border-color: var(--fv-border);
+}
+
+.brand,
+.nav-links a,
+.mobile-menu-toggle {
+    color: var(--fv-text);
+}
+
+.brand svg,
+.brand span span {
+    color: var(--fv-accent);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--fv-accent-text);
+    border-color: var(--fv-accent);
+}
+
+
+/* Profile button */
+
+.fv-account-trigger,
+.fv-profile-nav-link {
+    color: var(--fv-text);
+    background: var(--fv-accent-soft);
+    border-color: var(--fv-accent);
+}
+
+.fv-account-trigger:hover,
+.fv-profile-nav-link:hover {
+    background: #4a231a;
+}
+
+.fv-account-trigger:focus-visible,
+.fv-profile-nav-link:focus-visible {
+    outline-color: var(--fv-accent-text);
+}
+
+
+/* ==========================================
+   3. GLOBAL BUTTONS
+   ========================================== */
+
+.button--green,
+.workout-page .primary-button,
+.fv-mini-profile-logout,
+.fv-fitness-save {
+    background: var(--fv-button);
+    color: #ffffff;
+    border-color: #ff4b2066;
+
+    box-shadow: 0 6px 20px #ff4b2026;
+}
+
+.button--green:hover,
+.workout-page .primary-button:hover:not(:disabled),
+.fv-mini-profile-logout:hover:not(:disabled),
+.fv-fitness-save:hover:not(:disabled) {
+    background: linear-gradient(
+        120deg,
+        #d0360c,
+        #b72319
+    );
+
+    box-shadow: 0 8px 24px #ff4b2033;
+}
+
+.button--outline {
+    color: var(--fv-text);
+    background: var(--fv-surface-raised);
+    border-color: var(--fv-border);
+}
+
+.button--outline:hover {
+    border-color: var(--fv-accent);
+}
+
+
+/* ==========================================
+   4. HOMEPAGE HERO SECTION
+   ========================================== */
+
+.hero {
+    color: var(--fv-text);
+}
+
+.hero__eyebrow {
+    background: var(--fv-accent-soft);
+    color: var(--fv-accent-text);
+    border: 1px solid var(--fv-accent-border);
+}
+
+.hero__eyebrow svg,
+.hero h1 span,
+.hero__text-link {
+    color: var(--fv-accent-text);
+}
+
+.hero__description,
+.backend-indicator {
+    color: var(--fv-muted);
+}
+
+.hero__visual {
+    background: radial-gradient(
+        ellipse at bottom right,
+        #57231a,
+        #131114 70%
+    );
+
+    border: 1px solid var(--fv-accent-border);
+}
+
+.hero__visual > img {
+    filter: brightness(.86);
+}
+
+.hero__motto,
+.hero__motto span {
+    color: var(--fv-text);
+    text-shadow: 0 2px 8px #000;
+}
+
+.hero__pill {
+    background: #231613ed;
+    color: var(--fv-text);
+
+    border: 1px solid var(--fv-accent-border);
+    box-shadow: var(--fv-shadow);
+}
+
+.hero__pill svg {
+    color: var(--fv-accent-text);
+}
+
+.backend-indicator span {
+    background: var(--fv-warning);
+}
+
+.backend-indicator--online span {
+    background: var(--fv-success);
+}
+
+
+/* ==========================================
+   5. FEATURE CARDS
+   ========================================== */
+
+.section-kicker {
+    color: var(--fv-accent-text);
+}
+
+.section-intro > p {
+    color: var(--fv-muted);
+}
+
+.feature-card {
+    --icon: var(--fv-accent-text);
+
+    background:
+        var(--fv-glow),
+        var(--fv-surface);
+
+    border-color: var(--fv-border);
+    box-shadow: var(--fv-shadow);
+
+    color: var(--fv-text);
+}
+
+.feature-card:hover {
+    border-color: var(--fv-accent-border);
+    box-shadow: 0 8px 28px #ff4b201c;
+}
+
+.feature-card__icon {
+    background: var(--fv-accent-soft);
+    color: var(--fv-accent-text);
+}
+
+.feature-card h3 {
+    color: var(--fv-text);
+}
+
+.feature-card p {
+    color: var(--fv-muted);
+}
+
+.feature-card__image {
+    filter: brightness(.66) saturate(.85);
+}
+
+.feature-card__arrow {
+    color: var(--fv-accent-text);
+    background: var(--fv-surface-raised);
+    box-shadow: var(--fv-shadow);
+}
+
+
+/* ==========================================
+   6. ABOUT, WHY US AND CONTACT
+   ========================================== */
+
+.info-section,
+.why-section,
+.contact-section {
+    color: var(--fv-text);
+
+    background:
+        var(--fv-glow),
+        var(--fv-surface);
+
+    border: 1px solid var(--fv-border);
+    box-shadow: var(--fv-shadow);
+}
+
+.info-section > p,
+.why-grid p,
+.contact-section p,
+.site-footer {
+    color: var(--fv-muted);
+}
+
+.info-section h2 span,
+.why-grid svg,
+.site-footer span {
+    color: var(--fv-accent-text);
+}
+
+.why-grid strong {
+    color: var(--fv-text);
+}
+
+
+/* ==========================================
+   7. LOGIN AND SIGNUP
+   ========================================== */
+
+.auth-aside {
+    background:
+        var(--fv-glow),
+        var(--fv-surface);
+
+    border: 1px solid var(--fv-border);
+}
+
+.auth-aside h1 span,
+.auth-switch a {
+    color: var(--fv-accent-text);
+}
+
+.auth-aside > p:not(.section-kicker),
+.auth-panel__subtitle,
+.auth-switch,
+.empty-state > p:not(.section-kicker) {
+    color: var(--fv-muted);
+}
+
+.auth-panel__icon,
+.empty-state__icon {
+    color: var(--fv-accent-text);
+    background: var(--fv-accent-soft);
+}
+
+.auth-ui-notice {
+    color: var(--fv-muted);
+    background: var(--fv-surface-raised);
+}
+
+.auth-form input,
+.password-field {
+    background: var(--fv-surface-deep);
+    color: var(--fv-text);
+    border-color: var(--fv-border);
+}
+
+.password-field input {
+    background: transparent;
+}
+
+.password-field button {
+    color: var(--fv-muted);
+}
+
+.auth-form input:focus,
+.password-field:focus-within {
+    border-color: var(--fv-accent);
+    box-shadow: 0 0 0 3px #ff4b2026;
+}
+
+.form-message {
+    background: var(--fv-success-bg);
+    color: var(--fv-success);
+}
+
+
+/* ==========================================
+   8. LIVE WORKOUT PAGE
+   ========================================== */
+
+.workout-page {
+    --primary-green: var(--fv-accent);
+    --dark-green: var(--fv-accent-text);
+    --dark-text: var(--fv-text);
+    --muted-text: var(--fv-muted);
+    --border-color: var(--fv-border);
+
+    color: var(--fv-text);
+    background: var(--fv-bg);
+}
+
+
+/* Workout hero banner */
+
+.workout-page .hero-content {
+    background:
+        radial-gradient(
+            ellipse at bottom left,
+            #6a271c65,
+            transparent 56%
+        ),
+        radial-gradient(
+            ellipse at top right,
+            #ff4b2020,
+            transparent 65%
+        ),
+        var(--fv-surface-deep);
+
+    border-color: var(--fv-accent-border);
+    box-shadow: var(--fv-shadow);
+}
+
+.workout-page .hero-content::before,
+.workout-page .hero-content::after {
+    background: var(--fv-accent);
+    opacity: .12;
+}
+
+.workout-page .ai-badge {
+    background: var(--fv-accent-soft);
+    border-color: var(--fv-accent-border);
+    color: var(--fv-accent-text);
+    box-shadow: none;
+}
+
+.workout-page .live-dot {
+    background: var(--fv-accent);
+    animation: none;
+}
+
+.workout-page .hero-heading {
+    color: var(--fv-text);
+}
+
+.workout-page .highlight {
+    background: linear-gradient(
+        90deg,
+        #ff7048,
+        #ff392e
+    );
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.workout-page .highlight::after {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--fv-accent),
+        transparent
+    );
+}
+
+.workout-page .hero-description,
+.workout-page .workout-plan-heading p {
+    color: var(--fv-muted);
+}
+
+
+/* ==========================================
+   9. WORKOUT CONFIGURATION PANEL
+   ========================================== */
+
+.workout-page .workout-plan,
+.workout-page .workout-panel,
+.workout-page.fv-live-redesign
+.workout-panel.fv-workout-panel--biceps {
+    background: var(--fv-surface-deep);
+    color: var(--fv-text);
+    border-color: var(--fv-border);
+    box-shadow: var(--fv-shadow);
+}
+
+.workout-page .workout-plan-icon {
+    background: var(--fv-accent-soft);
+    color: var(--fv-accent-text);
+}
+
+.workout-page .workout-plan-heading h2,
+.workout-page .workout-plan-field label {
+    color: var(--fv-text);
+}
+
+.workout-page .workout-plan-field input,
+.workout-page .workout-plan-field select {
+    background: var(--fv-surface);
+    color: var(--fv-text);
+    border-color: #62626b;
+}
+
+.workout-page .workout-plan-field input:focus,
+.workout-page .workout-plan-field select:focus {
+    border-color: var(--fv-accent);
+    box-shadow: 0 0 0 3px #ff4b2026;
+}
+
+.workout-page .workout-plan-summary {
+    background:
+        var(--fv-glow),
+        var(--fv-surface);
+
+    border-color: var(--fv-accent-border);
+}
+
+.workout-page .workout-plan-stat {
+    color: var(--fv-accent-text);
+}
+
+.workout-page .workout-plan-stat span {
+    color: var(--fv-muted);
+}
+
+.workout-page .workout-plan-stat strong {
+    color: var(--fv-text);
+}
+
+
+/* ==========================================
+   10. LIVE CAMERA AND UPLOAD VIDEO
+   ========================================== */
+
+.workout-page .workout-mode-selector {
+    background: var(--fv-surface);
+    border-color: var(--fv-border);
+}
+
+.workout-page .workout-mode-button {
+    color: var(--fv-muted);
+}
+
+.workout-page .workout-mode-button:hover {
+    color: var(--fv-accent-text);
+    background: var(--fv-accent-soft);
+}
+
+.workout-page .workout-mode-button.active {
+    color: white;
+    background: var(--fv-button);
+    box-shadow: 0 4px 16px #ff4b2026;
+}
+
+
+/* Camera preview colors only */
+
+.workout-page .camera-preview,
+.workout-page .camera-placeholder {
+    background: radial-gradient(
+        ellipse at center,
+        #292427,
+        #0e0e11 80%
+    );
+}
+
+.workout-page .camera-preview {
+    border-color: var(--fv-border);
+}
+
+.workout-page .camera-preview > video.camera-video {
+    background: #0e0e11;
+}
+
+.workout-page .camera-placeholder > svg {
+    color: var(--fv-muted);
+}
+
+.workout-page .camera-placeholder h3 {
+    color: var(--fv-text);
+}
+
+.workout-page .camera-placeholder p {
+    color: var(--fv-muted);
+}
+
+
+/* Camera controls */
+
+.workout-page .secondary-button {
+    background: #a8242b;
+    color: white;
+    box-shadow: 0 6px 16px #a8242b30;
+}
+
+.workout-page .secondary-button:hover {
+    box-shadow: 0 8px 22px #a8242b45;
+}
+
+.workout-page button:focus-visible {
+    outline-color: var(--fv-accent-text);
+}
+
+.workout-page .uploaded-file-info {
+    background: var(--fv-accent-soft);
+    color: var(--fv-accent-text);
+    border-color: var(--fv-accent-border);
+}
+
+.workout-page .video-format-note {
+    color: var(--fv-muted);
+}
+
+
+/* ==========================================
+   11. REP COUNTER AND METRIC CARDS
+   ========================================== */
+
+.workout-page .fv-rep-bar,
+.workout-page .fv-camera-metric,
+.workout-page .pose-status-item,
+.workout-page .fv-analysis,
+.workout-page .fv-analysis-card,
+.workout-page .fv-coach-panel {
+    background: var(--fv-surface);
+    color: var(--fv-text);
+
+    border-color: var(--fv-border);
+    box-shadow: var(--fv-shadow);
+}
+
+.workout-page .fv-rep-bar {
+    border-color: var(--fv-accent-border);
+}
+
+.workout-page .fv-rep-bar-icon,
+.workout-page .fv-analysis-icon {
+    color: var(--fv-accent-text);
+    background: var(--fv-accent-soft);
+}
+
+.workout-page .fv-rep-bar-number strong,
+.workout-page .fv-rep-bar-progress-label strong {
+    color: var(--fv-accent-text);
+}
+
+.workout-page .fv-rep-bar-label,
+.workout-page .fv-rep-bar-number > span,
+.workout-page .fv-rep-bar-progress-label,
+.workout-page .fv-camera-metric-label,
+.workout-page .fv-camera-metric small,
+.workout-page .pose-status-item span,
+.workout-page .fv-analysis-title p,
+.workout-page .fv-analysis-label,
+.workout-page .fv-analysis-card > small {
+    color: var(--fv-muted);
+}
+
+
+/* Rep progress bar */
+
+.workout-page .fv-rep-bar-progress progress {
+    background: var(--fv-surface-raised);
+    color: var(--fv-accent);
+    accent-color: var(--fv-accent);
+}
+
+.workout-page
+.fv-rep-bar-progress
+progress::-webkit-progress-bar {
+    background: var(--fv-surface-raised);
+}
+
+.workout-page
+.fv-rep-bar-progress
+progress::-webkit-progress-value {
+    background: var(--fv-accent);
+}
+
+.workout-page
+.fv-rep-bar-progress
+progress::-moz-progress-bar {
+    background: var(--fv-accent);
+}
+
+
+/* Metric values and icons */
+
+.workout-page .fv-camera-metric-icon {
+    background: var(--fv-surface-raised);
+    color: var(--fv-muted);
+}
+
+.workout-page .fv-camera-metric-value,
+.workout-page .pose-status-item strong {
+    color: var(--fv-text);
+}
+
+.workout-page
+.fv-camera-metric.neutral
+.fv-camera-metric-value {
+    color: var(--fv-muted);
+}
+
+.workout-page .fv-rep-bar-status,
+.workout-page .fv-analysis-status {
+    background: var(--fv-surface-raised);
+    color: var(--fv-muted);
+}
+
+
+/* ==========================================
+   12. CORRECT EXERCISE FORM
+   ========================================== */
+
+.workout-page .fv-camera-metric.good {
+    background: var(--fv-success-bg);
+    border-color: var(--fv-success-border);
+}
+
+.workout-page
+.fv-camera-metric.good
+.fv-camera-metric-value,
+
+.workout-page
+.fv-camera-metric.good
+.fv-camera-metric-icon,
+
+.workout-page .pose-status-value.ready {
+    color: var(--fv-success);
+}
+
+.workout-page
+.fv-camera-metric.good
+.fv-camera-metric-icon,
+
+.workout-page .fv-rep-bar-status.good,
+.workout-page .fv-analysis-status.active {
+    background: var(--fv-success-bg);
+    color: var(--fv-success);
+}
+
+
+/* ==========================================
+   13. INCORRECT EXERCISE FORM
+   ========================================== */
+
+.workout-page .fv-camera-metric.bad {
+    background: var(--fv-danger-bg);
+    border-color: var(--fv-danger-border);
+}
+
+.workout-page
+.fv-camera-metric.bad
+.fv-camera-metric-value,
+
+.workout-page
+.fv-camera-metric.bad
+.fv-camera-metric-icon,
+
+.workout-page .pose-status-value.error {
+    color: var(--fv-danger);
+}
+
+.workout-page
+.fv-camera-metric.bad
+.fv-camera-metric-icon,
+
+.workout-page .fv-rep-bar-status.bad {
+    background: var(--fv-danger-bg);
+    color: var(--fv-danger);
+}
+
+.workout-page .pose-status-value.loading {
+    color: var(--fv-warning);
+}
+
+.workout-page .pose-status-value.waiting,
+.workout-page .pose-status-value.idle {
+    color: var(--fv-muted);
+}
+
+
+/* Existing progress ring, if used */
+
+.workout-page .fv-rep-hero {
+    background:
+        var(--fv-glow),
+        var(--fv-surface-deep);
+
+    box-shadow: var(--fv-shadow);
+}
+
+.workout-page .fv-rep-kicker,
+.workout-page .fv-rep-number span,
+.workout-page .fv-rep-hero small {
+    color: var(--fv-muted);
+}
+
+.workout-page .fv-rep-ring {
+    background: conic-gradient(
+        var(--fv-accent) var(--progress),
+        var(--fv-surface-raised) 0
+    );
+}
+
+.workout-page .fv-rep-ring > div {
+    background: var(--fv-surface);
+}
+
+.workout-page .fv-analysis-label svg {
+    color: var(--fv-accent-text);
+}
+
+
+/* ==========================================
+   14. AI PERSONAL COACH
+   ========================================== */
+
+.workout-page .fv-coach-message,
+.workout-page .fv-coach-panel .fv-coach-message {
+    background: var(--fv-surface-deep);
+
+    border-color: var(--fv-border);
+    border-left-color: var(--fv-muted);
+
+    color: var(--fv-muted);
+}
+
+
+/* Correct posture */
+
+.workout-page .fv-coach-message.success,
+.workout-page .fv-coach-panel .fv-coach-message.success {
+    background: var(--fv-success-bg);
+
+    border-color: var(--fv-success-border);
+    border-left-color: var(--fv-success);
+
+    color: var(--fv-success);
+}
+
+
+/* Incorrect posture */
+
+.workout-page .fv-coach-message.error,
+.workout-page .fv-coach-panel .fv-coach-message.error {
+    background: var(--fv-danger-bg);
+
+    border-color: var(--fv-danger-border);
+    border-left-color: var(--fv-danger);
+
+    color: var(--fv-danger);
+}
+
+
+/* ==========================================
+   15. AI FORM FEEDBACK
+   ========================================== */
+
+.workout-page .fv-feedback,
+.workout-page .fv-coach-panel .fv-feedback {
+    background: var(--fv-surface-deep);
+    border-color: var(--fv-border);
+}
+
+.workout-page .fv-feedback h3 svg,
+.workout-page .fv-coach-panel .fv-feedback h3 svg,
+.workout-page .fv-analysis-footer svg,
+.workout-page .fv-coach-panel .fv-analysis-footer svg {
+    color: var(--fv-accent-text);
+}
+
+.workout-page .fv-feedback-row,
+.workout-page .fv-coach-panel .fv-feedback-row {
+    border-color: var(--fv-border);
+}
+
+.workout-page .fv-feedback-row small,
+.workout-page .fv-coach-panel .fv-feedback-row small,
+.workout-page .fv-analysis-footer,
+.workout-page .fv-coach-panel .fv-analysis-footer {
+    color: var(--fv-muted);
+}
+
+.workout-page .fv-feedback-row > svg,
+.workout-page .fv-coach-panel .fv-feedback-row > svg {
+    color: var(--fv-muted);
+}
+
+.workout-page .fv-feedback-row > span,
+.workout-page .fv-coach-panel .fv-feedback-row > span {
+    background: var(--fv-surface-raised);
+    color: var(--fv-muted);
+}
+
+.workout-page .fv-feedback-row.good > svg,
+.workout-page .fv-coach-panel .fv-feedback-row.good > svg {
+    color: var(--fv-success);
+}
+
+.workout-page .fv-feedback-row.good > span,
+.workout-page .fv-coach-panel .fv-feedback-row.good > span {
+    color: var(--fv-success);
+    background: var(--fv-success-bg);
+}
+
+.workout-page .fv-feedback-row.warn > svg,
+.workout-page .fv-coach-panel .fv-feedback-row.warn > svg {
+    color: var(--fv-danger);
+}
+
+.workout-page .fv-feedback-row.warn > span,
+.workout-page .fv-coach-panel .fv-feedback-row.warn > span {
+    color: var(--fv-danger);
+    background: var(--fv-danger-bg);
+}
+
+
+/* ==========================================
+   16. PRIVACY AND INFORMATION MESSAGES
+   ========================================== */
+
+.workout-page .privacy-note {
+    background: var(--fv-surface);
+    color: var(--fv-text);
+
+    border-color: var(--fv-border);
+    border-left-color: var(--fv-accent);
+}
+
+.workout-page .privacy-note svg {
+    color: var(--fv-accent-text);
+}
+
+.workout-page .phase-note {
+    background: var(--fv-surface);
+    color: var(--fv-muted);
+
+    border-color: var(--fv-border);
+    border-left-color: var(--fv-accent);
+}
+
+.workout-page .error-message {
+    background: var(--fv-danger-bg);
+    color: var(--fv-danger);
+
+    border-color: var(--fv-danger-border);
+    border-left-color: var(--fv-danger);
+}
+
+
+/* ==========================================
+   17. USER PROFILE
+   ========================================== */
+
+.fv-mini-profile-page {
+    background: var(--fv-bg);
+}
+
+.fv-mini-profile-card,
+.fv-account-popup {
+    background: var(--fv-surface);
+    color: var(--fv-text);
+
+    border-color: var(--fv-border);
+    box-shadow: var(--fv-shadow);
+}
+
+.fv-mini-profile-avatar,
+.fv-mini-profile-section-icon,
+.fv-account-avatar,
+.fv-account-item-icon {
+    background: var(--fv-accent-soft);
+    color: var(--fv-accent-text);
+}
+
+.fv-mini-profile-header h1,
+.fv-mini-profile-section-body h3 {
+    color: var(--fv-text);
+}
+
+.fv-mini-profile-header p,
+.fv-mini-profile-section-body p,
+.fv-account-user-info p,
+.fv-account-item-text p,
+.fv-fitness-heading p,
+.fv-fitness-field span,
+.fv-fitness-message,
+.fv-account-close {
+    color: var(--fv-muted);
+}
+
+.fv-mini-profile-active {
+    background: var(--fv-success-bg);
+    color: var(--fv-success);
+}
+
+.fv-mini-profile-upcoming {
+    background: #342817;
+    color: var(--fv-warning);
+}
+
+.fv-mini-profile-secure,
+.fv-mini-profile-workout,
+.fv-account-user-info small,
+.fv-account-item-text small,
+.fv-account-item-link > svg:last-child {
+    color: var(--fv-accent-text);
+}
+
+.fv-mini-profile-workout:hover {
+    color: var(--fv-accent);
+}
+
+.fv-mini-profile-section,
+.fv-fitness-heading {
+    border-color: var(--fv-border);
+}
+
+
+/* ==========================================
+   18. ACCOUNT POPUP
+   ========================================== */
+
+.fv-account-user,
+.fv-account-item {
+    background: var(--fv-surface-deep);
+}
+
+.fv-account-item-link:hover,
+.fv-account-logout:hover:not(:disabled) {
+    background: var(--fv-accent-soft);
+}
+
+
+/* ==========================================
+   19. FITNESS PREFERENCES
+   ========================================== */
+
+.fv-fitness-back,
+.fv-fitness-retry {
+    background: var(--fv-surface-raised);
+    color: var(--fv-text);
+}
+
+.fv-fitness-back:hover:not(:disabled) {
+    background: var(--fv-accent-soft);
+}
+
+.fv-fitness-field input,
+.fv-fitness-field select {
+    background: var(--fv-surface-deep);
+    color: var(--fv-text);
+    border-color: #62626b;
+}
+
+.fv-fitness-field input::placeholder {
+    color: var(--fv-muted);
+}
+
+.fv-fitness-field input:focus,
+.fv-fitness-field select:focus {
+    border-color: var(--fv-accent);
+    outline-color: var(--fv-accent-text);
+}
+
+.fv-fitness-success {
+    background: var(--fv-success-bg);
+    color: var(--fv-success);
+}
+
+.fv-fitness-error,
+.fv-mini-profile-error {
+    background: var(--fv-danger-bg);
+    color: var(--fv-danger);
+}
+
+.fv-mini-profile-error button {
+    color: inherit;
+}
+
+.fv-mini-profile-page a:focus-visible,
+.fv-mini-profile-page button:focus-visible,
+.fv-account-popup a:focus-visible,
+.fv-account-popup button:focus-visible {
+    outline-color: var(--fv-accent-text);
+}
+
+
+/* ==========================================
+   END OF FITVERSE GLOBAL DARK THEME
+   ========================================== */

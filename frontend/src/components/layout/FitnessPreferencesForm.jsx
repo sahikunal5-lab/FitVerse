@@ -313,7 +313,7 @@ export default function FitnessPreferencesForm({
 
         <div>
           <h3>Fitness Preferences</h3>
-          <p>Personalize your FitVerse experience</p>
+          <p>Personalize your FitOrbit experience</p>
         </div>
 
       </div>

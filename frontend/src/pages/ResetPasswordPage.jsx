@@ -281,14 +281,22 @@ export default function ResetPasswordPage() {
           <span>.</span>
         </h1>
 
-        <p>
-          Move toward your goals with a smarter
-          fitness and nutrition experience.
-        </p>
+
+
+        {/* Light Mode Image */}
+
+        <img
+          src="/images/hero-light.png"
+          alt="FitOrbit fitness companion"
+          className="fo-auth-image fo-auth-image--light"
+        />
+
+        {/* Dark Mode Image */}
 
         <img
           src="/images/hero-athlete.png"
-          alt="Fitness athlete"
+          alt="FitOrbit fitness companion"
+          className="fo-auth-image fo-auth-image--dark"
         />
 
       </div>
@@ -407,7 +415,7 @@ export default function ResetPasswordPage() {
             <h2>Set new password</h2>
 
             <p className="auth-panel__subtitle">
-              Create a new password for your FitVerse account.
+              Create a new password for your FitOrbit account.
             </p>
 
             <p className="auth-ui-notice">

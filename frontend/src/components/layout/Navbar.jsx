@@ -15,7 +15,12 @@ import {
 } from "../../features/auth/authSlice";
 
 import AccountMenu from "./AccountMenu";
+import ThemeToggle from "./ThemeToggle";
 
+
+// ==========================================
+// NAVIGATION LINKS
+// ==========================================
 
 const anchorLinks = [
   { label: "Features", href: "/#features" },
@@ -25,13 +30,21 @@ const anchorLinks = [
 ];
 
 
+// ==========================================
+// NAVBAR COMPONENT
+// ==========================================
+
 export default function Navbar() {
 
   // Redux authentication state
+
   const user = useSelector(selectUser);
+
   const status = useSelector(selectAuthStatus);
 
+
   // Mobile navigation state
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);
@@ -42,14 +55,18 @@ export default function Navbar() {
 
       <div className="container navbar">
 
-        {/* FITVERSE LOGO */}
+
+        {/* =================================
+            FITORBIT LOGO
+        ================================= */}
 
         <Link
           className="brand"
           to="/"
           onClick={closeMenu}
-          aria-label="FitVerse home"
+          aria-label="FitOrbit home"
         >
+
           <Dumbbell
             size={34}
             strokeWidth={2.7}
@@ -57,32 +74,15 @@ export default function Navbar() {
           />
 
           <span>
-            Fit<span>Verse</span>
+            Fit<span>Orbit</span>
           </span>
+
         </Link>
 
 
-        {/* MOBILE MENU BUTTON */}
-
-        <button
-          type="button"
-          className="mobile-menu-toggle"
-          aria-label={
-            menuOpen
-              ? "Close navigation"
-              : "Open navigation"
-          }
-          aria-expanded={menuOpen}
-          aria-controls="primary-navigation"
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          {menuOpen
-            ? <X size={24} />
-            : <Menu size={24} />}
-        </button>
-
-
-        {/* NAVIGATION CONTENT */}
+        {/* =================================
+            NAVIGATION CONTENT
+        ================================= */}
 
         <div
           id="primary-navigation"
@@ -90,6 +90,7 @@ export default function Navbar() {
             menuOpen ? "nav-content--open" : ""
           }`}
         >
+
 
           {/* NAVIGATION LINKS */}
 
@@ -107,6 +108,7 @@ export default function Navbar() {
             </NavLink>
 
             {anchorLinks.map((item) => (
+
               <a
                 key={item.href}
                 href={item.href}
@@ -114,57 +116,103 @@ export default function Navbar() {
               >
                 {item.label}
               </a>
+
             ))}
 
           </nav>
 
 
-          {/* AUTHENTICATION ACTIONS */}
+          {/* =================================
+              GUEST AUTHENTICATION ACTIONS
+          ================================= */}
 
-          <div className="nav-actions">
+          {status === "unauthenticated" && (
 
-            {/* CHECKING SESSION */}
+            <div className="nav-actions">
 
-            {status === "loading" && (
-              <span role="status">
-                Checking session...
-              </span>
-            )}
+              <Link
+                to="/login"
+                className="button button--outline"
+                onClick={closeMenu}
+              >
+                Login
+              </Link>
 
+              <Link
+                to="/signup"
+                className="button button--green"
+                onClick={closeMenu}
+              >
+                Sign Up
+              </Link>
 
-            {/* NOT LOGGED IN */}
+            </div>
 
-            {status === "unauthenticated" && (
-              <>
-                <Link
-                  to="/login"
-                  className="button button--outline"
-                  onClick={closeMenu}
-                >
-                  Login
-                </Link>
+          )}
 
-                <Link
-                  to="/signup"
-                  className="button button--green"
-                  onClick={closeMenu}
-                >
-                  Sign Up
-                </Link>
-              </>
-            )}
+        </div>
 
 
-            {/* LOGGED IN — ACCOUNT POPUP */}
+        {/* =================================
+            PERMANENT NAVBAR CONTROLS
+        ================================= */}
 
-            {status === "authenticated" && (
-              <AccountMenu
-                user={user}
-                closeMobileMenu={closeMenu}
-              />
-            )}
+        <div className="fo-navbar-controls">
 
-          </div>
+
+          {/* LIGHT / DARK MODE */}
+
+          <ThemeToggle />
+
+
+          {/* CHECKING SESSION */}
+
+          {status === "loading" && (
+
+            <span
+              className="fo-session-status"
+              role="status"
+            >
+              Checking session...
+            </span>
+
+          )}
+
+
+          {/* AUTHENTICATED PROFILE */}
+
+          {status === "authenticated" && (
+
+            <AccountMenu
+              user={user}
+              closeMobileMenu={closeMenu}
+            />
+
+          )}
+
+
+          {/* MOBILE MENU BUTTON */}
+
+          <button
+            type="button"
+            className="mobile-menu-toggle"
+            aria-label={
+              menuOpen
+                ? "Close navigation"
+                : "Open navigation"
+            }
+            aria-expanded={menuOpen}
+            aria-controls="primary-navigation"
+            onClick={() =>
+              setMenuOpen((open) => !open)
+            }
+          >
+
+            {menuOpen
+              ? <X size={24} aria-hidden="true" />
+              : <Menu size={24} aria-hidden="true" />}
+
+          </button>
 
         </div>
 

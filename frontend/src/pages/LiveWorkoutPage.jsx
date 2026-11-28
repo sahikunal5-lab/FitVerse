@@ -13,6 +13,7 @@ import {
   Video,
   FileVideo,
   X,
+  ScanLine,
 } from "lucide-react";
 
 import WorkoutPlan from "../features/workout/components/WorkoutPlan";
@@ -507,8 +508,8 @@ export default function LiveWorkoutPage() {
                 }
                 onError={handleVideoError}
                 className={`camera-video ${mode === "upload"
-                    ? "uploaded-video"
-                    : ""
+                  ? "uploaded-video"
+                  : ""
                   }`}
               />
 
@@ -588,9 +589,8 @@ export default function LiveWorkoutPage() {
           <div className="pose-status-item">
             <span>Body Detection</span>
             <strong
-              className={`pose-status-value ${
-                poseDetected ? "ready" : "waiting"
-              }`}
+              className={`pose-status-value ${poseDetected ? "ready" : "waiting"
+                }`}
             >
               {poseDetected ? "Pose Detected" : "No Pose Detected"}
             </strong>
@@ -759,28 +759,51 @@ export default function LiveWorkoutPage() {
 
         {/* Privacy Note */}
 
-        <div className="privacy-note">
+        <div className="fo-workout-information">
 
-          <ShieldCheck size={20} />
+          {/* Privacy Protection */}
 
-          <span>
+          <div className="fo-info-card">
 
-            Camera and selected videos run locally
-            in your browser. Video frames are not
-            sent to FastAPI.
+            <div className="fo-info-icon">
+              <ShieldCheck size={24} strokeWidth={1.8} />
+            </div>
 
-          </span>
+            <div className="fo-info-content">
+
+              <h3>Your Workout. Your Privacy.</h3>
+
+              <p>
+                Your camera and workout videos stay on your device.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          {/* Intelligent Movement Tracking */}
+
+          <div className="fo-info-card">
+
+            <div className="fo-info-icon">
+              <ScanLine size={24} strokeWidth={1.8} />
+            </div>
+
+            <div className="fo-info-content">
+
+              <h3>Intelligent Movement Tracking</h3>
+
+              <p>
+                Real-time pose detection, automatic rep counting
+                and form feedback for dumbbell biceps curls.
+              </p>
+
+            </div>
+
+          </div>
 
         </div>
-
-
-        <p className="phase-note">
-
-          AI pose detection runs locally in your browser.
-          The skeleton is drawn from detected body landmarks.
-          Biceps Curl repetition counting and form feedback are available.
-
-        </p>
 
       </div>
 

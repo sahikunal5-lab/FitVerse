@@ -13,7 +13,7 @@ import AuthSync from "./features/auth/AuthSync";
 import App from "./App";
 
 import "./styles/index.css";
-
+import "./styles/theme.css";
 
 ReactDOM.createRoot(
   document.getElementById("root")

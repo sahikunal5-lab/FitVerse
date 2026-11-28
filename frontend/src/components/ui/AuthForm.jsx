@@ -298,14 +298,22 @@ export default function AuthForm({ mode }) {
           <span>.</span>
         </h1>
 
-        <p>
-          Move toward your goals with a smarter
-          fitness and nutrition experience.
-        </p>
+        
+
+        {/* Light mode image */}
+
+        <img
+          src="/images/hero-light.png"
+          alt="FitOrbit fitness companion"
+          className="fo-auth-image fo-auth-image--light"
+        />
+
+        {/* Dark mode image */}
 
         <img
           src="/images/hero-athlete.png"
-          alt="Fitness athlete"
+          alt="FitOrbit fitness companion"
+          className="fo-auth-image fo-auth-image--dark"
         />
 
       </div>
@@ -325,7 +333,7 @@ export default function AuthForm({ mode }) {
 
         <p className="auth-panel__subtitle">
           {isSignup
-            ? "Start your FitVerse journey."
+            ? "Start your FitOrbit journey."
             : "Sign in to continue your journey."}
         </p>
 
@@ -538,7 +546,7 @@ export default function AuthForm({ mode }) {
 
           {isSignup
             ? "Already have an account? "
-            : "New to FitVerse? "}
+            : "New to FitOrbit? "}
 
           <Link to={isSignup ? "/login" : "/signup"}>
 

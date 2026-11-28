@@ -74,7 +74,7 @@ export default function AuthCheckPage() {
 
         <p>
           Verify your Supabase session
-          with the FitVerse FastAPI backend.
+          with the FitOrbit FastAPI backend.
         </p>
 
 
